@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Users", {
+    await queryInterface.createTable("Students", {
       // grade: DataTypes.STRING,
       // birthday: DataTypes.DATE,
       // listWordId: DataTypes.STRING,
@@ -41,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Users");
+    await queryInterface.dropTable("Students");
   },
 };
