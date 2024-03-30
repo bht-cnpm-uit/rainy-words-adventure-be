@@ -14,6 +14,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      grade: {
+        type: Sequelize.STRING,
+      },
       birthday: {
         type: Sequelize.DATE,
       },
@@ -29,7 +32,6 @@ module.exports = {
       schoolId: {
         type: Sequelize.INTEGER,
       },
-
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

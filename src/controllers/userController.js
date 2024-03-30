@@ -1,4 +1,4 @@
-import userService from "../services/userService";
+import { handleUserLogin } from "../services/userService";
 // example login
 
 let homePage = async (req, res) => {
@@ -13,7 +13,7 @@ let handleLogin = async (req, res) => {
       message: "Missing input parameter !",
     });
   }
-  let userData = await userService.handleUserLogin(username, password);
+  let userData = await handleUserLogin(username, password);
   return res.status(200).json({
     errCode: userData.errCode,
     message: userData.errMessage,
