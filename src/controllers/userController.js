@@ -1,4 +1,4 @@
-import { handleUserLogin } from "../services/userService";
+import { handleUserLogin, handleUserSignUp } from "../services/userService";
 // example login
 
 let homePage = async (req, res) => {
@@ -21,4 +21,11 @@ let handleLogin = async (req, res) => {
   });
 };
 
-export { homePage, handleLogin };
+let handleSignUp = async (req, res) => {
+  let signupData = req.body;
+  console.log(signupData);
+  let userData = await handleUserSignUp(signupData);
+  return res.status(200).json(userData);
+};
+
+export { homePage, handleLogin, handleSignUp };

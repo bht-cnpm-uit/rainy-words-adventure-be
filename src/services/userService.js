@@ -49,7 +49,7 @@ let handleUserLogin = (username, password) => {
           }
         }
       } else {
-        userData.errCode = 1;
+        userData.errCode = 2;
         userData.errMessage = `Your username isn's exists in our system. Please try again!`;
       }
       resolve(userData);
@@ -59,4 +59,49 @@ let handleUserLogin = (username, password) => {
   });
 };
 
-export { handleUserLogin };
+let handleUserSignUp = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Extract signup information from the request body
+      const { schoolId, grade, birthday, listWordId, phoneNumber, password } =
+        data;
+
+      // Check if phoneNumber already exists
+      const existingUser = await db.Student.findOne({
+        where: { phoneNumber: phoneNumber },
+      });
+      if (existingUser) {
+        resolve({ message: "Phone number already exists", statusCode: "400" });
+        //return res.status(400).json({ error: "Phone number already exists" });
+      } else {
+        const newUser = await db.Student.create({
+          schoolId,
+          grade,
+          birthday,
+          listWordId,
+          phoneNumber,
+          password,
+        });
+
+        // Send a success response
+        //res.status(201).json(newUser);
+        resolve({
+          userInfo: newUser,
+          message: "Sign up sucessfully",
+          statusCode: "201",
+        });
+      }
+      // Create a new user in the database
+    } catch (error) {
+      // Handle any errors
+      console.error("Error signing up:", error);
+      reject({
+        message: "An error occurred while signing up",
+        statusCode: "500",
+      });
+      //res.status(500).json({ error: "An error occurred while signing up" });
+    }
+  });
+};
+
+export { handleUserLogin, handleUserSignUp };

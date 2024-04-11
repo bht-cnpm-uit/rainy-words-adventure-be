@@ -23,7 +23,7 @@ module.exports = {
       listWordId: {
         type: Sequelize.TEXT,
       },
-      username: {
+      phoneNumber: {
         type: Sequelize.STRING,
       },
       password: {
