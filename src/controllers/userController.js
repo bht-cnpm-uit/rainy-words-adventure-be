@@ -2,6 +2,7 @@ import {
   handleUserLogin,
   handleUserSignUp,
   handleUserUpdate,
+  handleUserChangePassword,
 } from "../services/userService";
 // example login
 
@@ -39,4 +40,17 @@ let handleUpdate = async (req, res) => {
   return res.status(200).json(userData);
 };
 
-export { homePage, handleLogin, handleSignUp, handleUpdate };
+let handleChangePassword = async (req, res) => {
+  let changePasswordData = req.body;
+  console.log(changePasswordData);
+  let userData = await handleUserChangePassword(changePasswordData);
+  return res.status(200).json(userData);
+};
+
+export {
+  homePage,
+  handleLogin,
+  handleSignUp,
+  handleUpdate,
+  handleChangePassword,
+};

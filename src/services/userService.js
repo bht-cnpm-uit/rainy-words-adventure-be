@@ -151,4 +151,43 @@ let handleUserUpdate = (data) => {
   });
 };
 
-export { handleUserLogin, handleUserSignUp, handleUserUpdate };
+let handleUserChangePassword = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Extract user ID from request parameters
+      const { phoneNumber, password } = data;
+
+      // Find the user by ID
+      const user = await db.Student.findOne({
+        where: { phoneNumber: phoneNumber },
+      });
+
+      if (user) {
+        // Update user password
+        user.password = password || user.password;
+
+        // Save the updated user information to the database
+        await user.save();
+
+        resolve({
+          userInfo: user,
+          message: "Change password sucessfully",
+          statusCode: "201",
+        });
+      }
+    } catch (error) {
+      // Handle any errors
+      reject({
+        message: "An error occurred while signing up",
+        statusCode: "500",
+      });
+    }
+  });
+};
+
+export {
+  handleUserLogin,
+  handleUserSignUp,
+  handleUserUpdate,
+  handleUserChangePassword,
+};
