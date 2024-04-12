@@ -104,4 +104,51 @@ let handleUserSignUp = (data) => {
   });
 };
 
-export { handleUserLogin, handleUserSignUp };
+let handleUserUpdate = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Extract user ID from request parameters
+      const { id, schoolId, grade, birthday, phoneNumber, password } = data;
+
+      // Find the user by ID
+      const user = await db.Student.findByPk(id);
+
+      // Check if phoneNumber already exists for another user
+      if (phoneNumber !== user.phoneNumber) {
+        const existingUser = await db.Student.findOne({
+          where: { phoneNumber },
+        });
+        if (existingUser) {
+          resolve({
+            message: "Phone number already exists",
+            statusCode: "400",
+          });
+        } else {
+          // Update user information
+          user.schoolId = schoolId || user.schoolId;
+          user.grade = grade || user.grade;
+          user.birthday = birthday || user.birthday;
+          user.phoneNumber = phoneNumber || user.phoneNumber;
+          user.password = password || user.password;
+
+          // Save the updated user information to the database
+          await user.save();
+
+          resolve({
+            userInfo: user,
+            message: "Update sucessfully",
+            statusCode: "201",
+          });
+        }
+      }
+    } catch (error) {
+      // Handle any errors
+      reject({
+        message: "An error occurred while signing up",
+        statusCode: "500",
+      });
+    }
+  });
+};
+
+export { handleUserLogin, handleUserSignUp, handleUserUpdate };

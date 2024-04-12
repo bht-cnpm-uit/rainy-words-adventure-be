@@ -3,14 +3,16 @@ import {
   homePage,
   handleLogin,
   handleSignUp,
+  handleUpdate,
 } from "../controllers/userController";
 import { hanldExport } from "../controllers/adminController";
 let router = Router();
 
 let initWebRoutes = (app) => {
   // user api
-  router.post("/api/login", handleLogin);
-  router.post("/api/signup", handleSignUp);
+  router.post("/api/user/login", handleLogin);
+  router.post("/api/user/signup", handleSignUp);
+  router.post("/api/user/update-info", handleUpdate);
   router.get("/", homePage);
 
   // admin

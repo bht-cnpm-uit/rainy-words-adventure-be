@@ -1,4 +1,8 @@
-import { handleUserLogin, handleUserSignUp } from "../services/userService";
+import {
+  handleUserLogin,
+  handleUserSignUp,
+  handleUserUpdate,
+} from "../services/userService";
 // example login
 
 let homePage = async (req, res) => {
@@ -28,4 +32,11 @@ let handleSignUp = async (req, res) => {
   return res.status(200).json(userData);
 };
 
-export { homePage, handleLogin, handleSignUp };
+let handleUpdate = async (req, res) => {
+  let updateData = req.body;
+  console.log(updateData);
+  let userData = await handleUserUpdate(updateData);
+  return res.status(200).json(userData);
+};
+
+export { homePage, handleLogin, handleSignUp, handleUpdate };
