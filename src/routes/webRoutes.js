@@ -7,6 +7,7 @@ import {
   handleChangePassword,
 } from "../controllers/userController";
 import { hanldExport } from "../controllers/adminController";
+import { getGameLeaderboard } from "../controllers/gameController";
 let router = Router();
 
 let initWebRoutes = (app) => {
@@ -16,6 +17,8 @@ let initWebRoutes = (app) => {
   router.post("/api/user/update-info", handleUpdate);
   router.post("/api/user/update-password", handleChangePassword);
   router.get("/", homePage);
+  //game api
+  router.get("/api/leaderboard/", getGameLeaderboard);
 
   // admin
   router.post("/api/exportdata", hanldExport);

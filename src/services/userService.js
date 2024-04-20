@@ -65,12 +65,12 @@ let handleUserSignUp = (data) => {
       var salt = bcrypt.genSaltSync(10);
 
       // Extract signup information from the request body
-      var schoolId = data.schoolId;
-      var grade = data.grade;
-      var birthday = data.birthday;
-      var listWordId = data.listWordId;
-      var phoneNumber = data.phoneNumber;
-      var password = data.password;
+      let schoolId = data.schoolId;
+      let grade = data.grade;
+      let birthday = data.birthday;
+      let listWordId = data.listWordId;
+      let phoneNumber = data.phoneNumber;
+      let password = data.password;
 
       // Check if phoneNumber already exists
       const existingUser = await db.Student.findOne({

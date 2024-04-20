@@ -11,14 +11,14 @@ let homePage = async (req, res) => {
 };
 
 let handleLogin = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
+  const { phoneNumber, password } = req.body;
+  if (!phoneNumber || !password) {
     return res.status(500).json({
       errCode: 1,
       message: "Missing input parameter !",
     });
   }
-  let userData = await handleUserLogin(username, password);
+  let userData = await handleUserLogin(phoneNumber, password);
   return res.status(200).json({
     errCode: userData.errCode,
     message: userData.errMessage,
