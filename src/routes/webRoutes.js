@@ -11,7 +11,7 @@ let router = Router();
 
 let initWebRoutes = (app) => {
   // user api
-  router.post("/api/user/login", handleLogin);
+  router.post("/api/login", handleLogin);
   router.post("/api/user/signup", handleSignUp);
   router.post("/api/user/update-info", handleUpdate);
   router.post("/api/user/update-password", handleChangePassword);

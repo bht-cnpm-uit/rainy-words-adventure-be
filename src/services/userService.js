@@ -1,11 +1,11 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 
-let checkUsername = (username) => {
+let checkPhoneNumber = (phoneNumber) => {
   return new Promise(async (resolve, reject) => {
     try {
       let user = await db.Student.findOne({
-        where: { username: username },
+        where: { phoneNumber: phoneNumber },
       });
       if (user) {
         resolve(user);
@@ -17,23 +17,23 @@ let checkUsername = (username) => {
     }
   });
 };
-let handleUserLogin = (username, password) => {
+let handleUserLogin = (phoneNumber, password) => {
   return new Promise(async (resolve, reject) => {
     try {
       let userData = {};
-      let users = await checkUsername(username);
+      let users = await checkPhoneNumber(phoneNumber);
       if (users) {
         // User already exists
         let user = await db.Student.findOne({
-          attributes: ["username", "password", "id"],
-          where: { username: username },
+          attributes: ["phoneNumber", "password", "id"],
+          where: { phoneNumber: phoneNumber },
           raw: true,
         });
 
         if (user) {
           let check;
           //let isTruePassword = bcrypt.compareSync(password, user.password);
-          if (user.password === password) {
+          if (bcrypt.compareSync(password, user.password)) {
             check = 1;
           } else {
             check = 0;
@@ -62,9 +62,15 @@ let handleUserLogin = (username, password) => {
 let handleUserSignUp = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
+      var salt = bcrypt.genSaltSync(10);
+
       // Extract signup information from the request body
-      const { schoolId, grade, birthday, listWordId, phoneNumber, password } =
-        data;
+      var schoolId = data.schoolId;
+      var grade = data.grade;
+      var birthday = data.birthday;
+      var listWordId = data.listWordId;
+      var phoneNumber = data.phoneNumber;
+      var password = data.password;
 
       // Check if phoneNumber already exists
       const existingUser = await db.Student.findOne({
@@ -74,6 +80,7 @@ let handleUserSignUp = (data) => {
         resolve({ message: "Phone number already exists", statusCode: "400" });
         //return res.status(400).json({ error: "Phone number already exists" });
       } else {
+        password = bcrypt.hashSync(password, salt);
         const newUser = await db.Student.create({
           schoolId,
           grade,
