@@ -65,6 +65,7 @@ let handleUserSignUp = (data) => {
       var salt = bcrypt.genSaltSync(10);
 
       // Extract signup information from the request body
+      let name = data.name;
       let schoolId = data.schoolId;
       let grade = data.grade;
       let birthday = data.birthday;
@@ -77,11 +78,12 @@ let handleUserSignUp = (data) => {
         where: { phoneNumber: phoneNumber },
       });
       if (existingUser) {
-        resolve({ message: "Phone number already exists", statusCode: "400" });
+        resolve({ message: "Phone number already exists", errCode: "2" });
         //return res.status(400).json({ error: "Phone number already exists" });
       } else {
         password = bcrypt.hashSync(password, salt);
         const newUser = await db.Student.create({
+          name,
           schoolId,
           grade,
           birthday,
@@ -95,7 +97,7 @@ let handleUserSignUp = (data) => {
         resolve({
           userInfo: newUser,
           message: "Sign up sucessfully",
-          statusCode: "201",
+          errCode: "0",
         });
       }
       // Create a new user in the database
@@ -104,7 +106,7 @@ let handleUserSignUp = (data) => {
       console.error("Error signing up:", error);
       reject({
         message: "An error occurred while signing up",
-        statusCode: "500",
+        error: "1",
       });
       //res.status(500).json({ error: "An error occurred while signing up" });
     }

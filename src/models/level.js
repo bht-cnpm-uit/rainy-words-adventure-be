@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       Level.belongsToMany(models.Topic, {
         through: "Level_Topic",
       });
+      Level.hasMany(models.Game);
     }
   }
   Level.init(

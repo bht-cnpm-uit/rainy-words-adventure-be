@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Game.belongsTo(models.Student);
+      Game.belongsTo(models.Level);
     }
   }
   Game.init(

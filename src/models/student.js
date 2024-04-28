@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Student.belongsToMany(models.Word, {
         through: "Student_Word",
       });
+      Student.hasMany(models.Game);
     }
   }
   Student.init(
