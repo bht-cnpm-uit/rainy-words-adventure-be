@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Word.belongsTo(models.Topic);
+      Word.belongsToMany(models.Student, {
+        through: "Student_Word",
+      });
     }
   }
   Word.init(
@@ -17,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       vocab: DataTypes.STRING,
       topicId: DataTypes.INTEGER,
       phonetic: DataTypes.STRING,
-      meaningVi: DataTypes.TEXT,
+      vietnamese: DataTypes.TEXT,
       example: DataTypes.TEXT,
     },
     {

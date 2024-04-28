@@ -9,12 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Level.belongsToMany(models.Student, {
+        through: "Game",
+      });
+      Level.belongsToMany(models.Topic, {
+        through: "Level_Topic",
+      });
     }
   }
   Level.init(
     {
       name: DataTypes.STRING,
-      listTopicId: DataTypes.TEXT,
     },
     {
       sequelize,

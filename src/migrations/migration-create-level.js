@@ -11,9 +11,6 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
-      listTopicId: {
-        type: Sequelize.TEXT,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

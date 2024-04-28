@@ -20,7 +20,7 @@ module.exports = {
       phonetic: {
         type: Sequelize.STRING,
       },
-      meaningVi: {
+      vietnamese: {
         type: Sequelize.TEXT,
       },
       example: {

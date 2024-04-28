@@ -16,14 +16,16 @@ let initWebRoutes = (app) => {
   router.post("/api/user/signup", handleSignUp);
   router.post("/api/user/update-info", handleUpdate);
   router.post("/api/user/update-password", handleChangePassword);
-  router.get("/", homePage);
   //game api
   router.get("/api/leaderboard/", getGameLeaderboard);
 
   // admin
   router.post("/api/exportdata", hanldExport);
-  return app.use("/", router);
+
   //user api
+
+  router.get("/", homePage);
+  return app.use("/", router);
 };
 
 module.exports = initWebRoutes;
