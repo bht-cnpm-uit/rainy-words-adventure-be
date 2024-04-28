@@ -37,4 +37,43 @@ const getLeaderboardByGame = (levelId) => {
   });
 };
 
-export { getLeaderboardByGame };
+const getLeaderboardAllGame = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await db.Game.findAll({
+        attributes: [
+          "studentId",
+          [db.sequelize.fn("sum", db.sequelize.col("score")), "total_score"],
+        ],
+        group: ["studentId"],
+
+        include: {
+          model: db.Student,
+          attributes: ["name", "grade", "phonenumber"],
+        },
+      });
+
+      if (result.length > 0) {
+        resolve({
+          message: "Get learderboard successfully!",
+          errCode: 0,
+          leaderboard: result,
+        });
+      } else {
+        resolve({
+          message: "Level does not have any student passing!",
+          errCode: 1,
+          leaderboard: result,
+        });
+      }
+    } catch (e) {
+      reject({
+        message: "Fail to get leaderboard!",
+        errCode: 2,
+        output: e,
+      });
+    }
+  });
+};
+
+export { getLeaderboardByGame, getLeaderboardAllGame };

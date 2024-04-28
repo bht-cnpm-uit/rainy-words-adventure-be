@@ -1,4 +1,7 @@
-import { getLeaderboardByGame } from "../services/gameService";
+import {
+  getLeaderboardByGame,
+  getLeaderboardAllGame,
+} from "../services/gameService";
 
 const getGameLeaderboard = async (req, res) => {
   let levelId = req.body.levelId;
@@ -12,4 +15,9 @@ const getGameLeaderboard = async (req, res) => {
   return res.status(200).json(leaderboad);
 };
 
-export { getGameLeaderboard };
+const getAllGameLeaderboard = async (req, res) => {
+  let leaderboad = await getLeaderboardAllGame();
+  return res.status(200).json(leaderboad);
+};
+
+export { getGameLeaderboard, getAllGameLeaderboard };
