@@ -6,10 +6,6 @@ import {
 } from "../services/userService";
 // example login
 
-let homePage = async (req, res) => {
-  res.send("Hello world");
-};
-
 let handleLogin = async (req, res) => {
   const { phoneNumber, password } = req.body;
   if (!phoneNumber || !password) {
@@ -27,9 +23,23 @@ let handleLogin = async (req, res) => {
 };
 
 let handleSignUp = async (req, res) => {
-  let signupData = req.body;
-  console.log(signupData);
-  let userData = await handleUserSignUp(signupData);
+  let { name, schoolId, grade, birthday, phoneNumber, password } = req.body;
+
+  if (!phoneNumber || !password || !name || !schoolId || !grade || !birthday) {
+    return res.status(500).json({
+      errCode: 1,
+      message: "Missing input parameter !",
+    });
+  }
+  console.log(req.body);
+  let userData = await handleUserSignUp(
+    name,
+    schoolId,
+    grade,
+    birthday,
+    phoneNumber,
+    password
+  );
   return res.status(200).json(userData);
 };
 
@@ -47,10 +57,4 @@ let handleChangePassword = async (req, res) => {
   return res.status(200).json(userData);
 };
 
-export {
-  homePage,
-  handleLogin,
-  handleSignUp,
-  handleUpdate,
-  handleChangePassword,
-};
+export { handleLogin, handleSignUp, handleUpdate, handleChangePassword };

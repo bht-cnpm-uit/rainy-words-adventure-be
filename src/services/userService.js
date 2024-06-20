@@ -1,5 +1,6 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 
 let checkPhoneNumber = (phoneNumber) => {
   return new Promise(async (resolve, reject) => {
@@ -59,19 +60,17 @@ let handleUserLogin = (phoneNumber, password) => {
   });
 };
 
-let handleUserSignUp = (data) => {
+let handleUserSignUp = (
+  name,
+  schoolId,
+  grade,
+  birthday,
+  phoneNumber,
+  password
+) => {
   return new Promise(async (resolve, reject) => {
     try {
-      var salt = bcrypt.genSaltSync(10);
-
-      // Extract signup information from the request body
-      let name = data.name;
-      let schoolId = data.schoolId;
-      let grade = data.grade;
-      let birthday = data.birthday;
-      let listWordId = data.listWordId;
-      let phoneNumber = data.phoneNumber;
-      let password = data.password;
+      let salt = bcrypt.genSaltSync(10);
 
       // Check if phoneNumber already exists
       const existingUser = await db.Student.findOne({
@@ -81,15 +80,20 @@ let handleUserSignUp = (data) => {
         resolve({ message: "Phone number already exists", errCode: "2" });
         //return res.status(400).json({ error: "Phone number already exists" });
       } else {
-        password = bcrypt.hashSync(password, salt);
+        let hashPassword = bcrypt.hashSync(password, salt);
+        console.log("🚀 ~ returnnewPromise ~ hashPassword:", hashPassword);
+        let id = uuidv4();
+        console.log("🚀 ~ returnnewPromise ~ id:", id);
+
         const newUser = await db.Student.create({
-          name,
-          schoolId,
-          grade,
-          birthday,
-          listWordId,
-          phoneNumber,
-          password,
+          id: id,
+          name: name,
+          schoolId: schoolId,
+          grade: grade,
+          birthday: birthday,
+          phoneNumber: phoneNumber,
+          password: hashPassword,
+          cup: 0,
         });
 
         // Send a success response
@@ -108,7 +112,6 @@ let handleUserSignUp = (data) => {
         message: "An error occurred while signing up",
         error: "1",
       });
-      //res.status(500).json({ error: "An error occurred while signing up" });
     }
   });
 };

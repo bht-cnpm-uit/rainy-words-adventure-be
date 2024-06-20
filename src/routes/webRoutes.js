@@ -10,26 +10,29 @@ import { hanldExport } from "../controllers/adminController";
 import {
   getGameLeaderboard,
   getAllGameLeaderboard,
+  getNewGame,
+  postSaveGame,
 } from "../controllers/gameController";
 let router = Router();
 
 let initWebRoutes = (app) => {
   // user api
-  router.post("/api/login", handleLogin);
-  router.post("/api/user/signup", handleSignUp);
-  router.post("/api/user/update-info", handleUpdate);
-  router.post("/api/user/update-password", handleChangePassword);
+  router.post("/login", handleLogin);
+  router.post("/user/signup", handleSignUp);
+  router.post("/user/update-info", handleUpdate);
+  router.post("/user/update-password", handleChangePassword);
   //game api
-  router.get("/api/leaderboard/", getGameLeaderboard);
-  router.get("/api/leaderboard/get-all", getAllGameLeaderboard);
+  router.get("/leaderboard/", getGameLeaderboard);
+  router.get("/leaderboard/get-all", getAllGameLeaderboard);
+  router.get("/game/create-new-game", getNewGame);
+  router.post("/game/save-game", postSaveGame);
 
   // admin
-  router.post("/api/exportdata", hanldExport);
+  router.post("/exportdata", hanldExport);
 
   //user api
 
-  router.get("/", homePage);
-  return app.use("/", router);
+  return app.use("/api", router);
 };
 
 module.exports = initWebRoutes;

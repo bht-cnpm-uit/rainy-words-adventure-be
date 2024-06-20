@@ -9,24 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Student.belongsTo(models.School);
-      Student.belongsToMany(models.Level, {
-        through: "Game",
-      });
-      Student.belongsToMany(models.Word, {
-        through: "Student_Word",
-      });
-      Student.hasMany(models.Game);
     }
   }
   Student.init(
     {
+      id: { type: DataTypes.STRING, primaryKey: true },
       name: DataTypes.STRING,
       grade: DataTypes.STRING,
       birthday: DataTypes.DATE,
       phoneNumber: DataTypes.STRING,
       password: DataTypes.STRING,
       schoolId: DataTypes.INTEGER,
+      cup: DataTypes.INTEGER,
     },
     {
       sequelize,
