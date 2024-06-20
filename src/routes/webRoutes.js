@@ -13,6 +13,14 @@ import {
   getNewGame,
   postSaveGame,
 } from "../controllers/gameController";
+
+import {
+  getAllTopic,
+  postCreateTopic,
+  postDeleteTopic,
+  postUpdateTopic,
+} from "../controllers/topicController";
+
 let router = Router();
 
 let initWebRoutes = (app) => {
@@ -28,6 +36,12 @@ let initWebRoutes = (app) => {
 
   // admin
   router.post("/exportdata", hanldExport);
+
+  //topic
+  router.get("/topic/get-all", getAllTopic);
+  router.post("/topic/create", postCreateTopic);
+  router.post("/topic/delete", postDeleteTopic);
+  router.post("/topic/update", postUpdateTopic);
 
   //user api
 
