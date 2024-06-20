@@ -20,7 +20,6 @@ let initWebRoutes = (app) => {
   router.post("/login", handleLogin);
   router.post("/user/signup", handleSignUp);
   router.post("/user/update-info", handleUpdate);
-  router.post("/user/update-password", handleChangePassword);
   //game api
   router.get("/leaderboard/", getGameLeaderboard);
   router.get("/leaderboard/get-all", getAllGameLeaderboard);

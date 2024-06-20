@@ -14,12 +14,8 @@ let handleLogin = async (req, res) => {
       message: "Missing input parameter !",
     });
   }
-  let userData = await handleUserLogin(phoneNumber, password);
-  return res.status(200).json({
-    errCode: userData.errCode,
-    message: userData.errMessage,
-    user: userData.user ? userData : {},
-  });
+  let response = await handleUserLogin(phoneNumber, password);
+  return res.status(200).json(response);
 };
 
 let handleSignUp = async (req, res) => {
@@ -44,10 +40,26 @@ let handleSignUp = async (req, res) => {
 };
 
 let handleUpdate = async (req, res) => {
-  let updateData = req.body;
-  console.log(updateData);
-  let userData = await handleUserUpdate(updateData);
-  return res.status(200).json(userData);
+  const {
+    schoolId,
+    grade,
+    birthday,
+    phoneNumber,
+    oldPassword,
+    newPassword,
+    isForgotPassword,
+  } = req.body;
+
+  let response = await handleUserUpdate(
+    schoolId,
+    grade,
+    birthday,
+    phoneNumber,
+    oldPassword,
+    newPassword,
+    isForgotPassword
+  );
+  return res.status(200).json(response);
 };
 
 let handleChangePassword = async (req, res) => {
