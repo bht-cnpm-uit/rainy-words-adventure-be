@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         through: "Level_Topic",
       });
       Level.hasMany(models.Game);
+      Level.hasMany(models.Level_Topic);
     }
   }
   Level.init(

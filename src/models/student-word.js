@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Student_Word.init(
     {
-      studentId: DataTypes.INTEGER,
+      studentId: DataTypes.STRING,
       vocabId: DataTypes.INTEGER,
     },
     {

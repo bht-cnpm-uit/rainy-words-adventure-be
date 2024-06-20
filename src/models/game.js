@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Game.init(
     {
       levelId: DataTypes.INTEGER,
-      studentId: DataTypes.INTEGER,
+      studentId: DataTypes.STRING,
       score: DataTypes.INTEGER,
     },
     {

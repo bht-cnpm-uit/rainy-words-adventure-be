@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         through: "Level_Topic",
       });
       Topic.hasMany(models.Word);
+      Topic.hasMany(models.Level_Topic);
     }
   }
   Topic.init(
