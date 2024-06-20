@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       levelVocab: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       vocab: {
         type: Sequelize.STRING,

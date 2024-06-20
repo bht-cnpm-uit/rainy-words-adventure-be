@@ -79,34 +79,48 @@ const getLeaderboardAllGame = () => {
 };
 
 const getRandomWords = (levelId, levelVocab) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      let listWord = db.Word.findAll({
+      let listTopic = await db.Level_Topic.findAll({
         where: {
-          levelVocab: levelVocab,
+          levelId: levelId,
         },
-        include: {
-          model: db.Topic,
-          include: {
-            model: db.Level_Topic,
-            where: {
-              levelId: levelId,
-            },
-          },
-        },
+        raw: true,
+      }).then((levels) => {
+        return levels.map((level) => level.topicId);
       });
 
-      resolve(listWord);
+      let listRandomWord = [];
+
+      for (let topicId of listTopic) {
+        let listWord = await db.Word.findAll({
+          where: {
+            levelVocab: levelVocab,
+            topicId: topicId,
+          },
+          order: db.Sequelize.literal("rand()"),
+          limit: 5,
+        });
+
+        listRandomWord = listRandomWord.concat(listWord);
+      }
+
+      resolve({
+        message: "Get list word successfully!",
+        errCode: 0,
+        listWord: listRandomWord,
+      });
     } catch (error) {
-      reject(error);
+      console.log(error);
+      resolve(error);
     }
   });
 };
 
 const saveGame = (levelId, studentId, score) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      let game = db.Game.create({
+      let game = await db.Game.create({
         levelId: levelId,
         studentId: studentId,
         score: score,

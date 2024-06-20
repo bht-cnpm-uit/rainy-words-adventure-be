@@ -9,14 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Level.belongsToMany(models.Student, {
-        through: "Game",
-      });
-      Level.belongsToMany(models.Topic, {
-        through: "Level_Topic",
-      });
-      Level.hasMany(models.Game);
-      Level.hasMany(models.Level_Topic);
+      // Level.belongsToMany(models.Student, {
+      //   through: "Game",
+      // });
+      // Level.belongsToMany(models.Topic, {
+      //   through: "Level_Topic",
+      // });
+      // Level.hasMany(models.Game);
+      // Level.hasMany(models.Level_Topic);
     }
   }
   Level.init(

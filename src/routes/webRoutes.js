@@ -23,7 +23,7 @@ let initWebRoutes = (app) => {
   //game api
   router.get("/leaderboard/", getGameLeaderboard);
   router.get("/leaderboard/get-all", getAllGameLeaderboard);
-  router.get("/game/create-new-game", getNewGame);
+  router.get("/game/create-new-game/:levelid/:levelvocab", getNewGame);
   router.post("/game/save-game", postSaveGame);
 
   // admin

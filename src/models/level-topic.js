@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Level_Topic.belongsTo(models.Level);
-      Level_Topic.belongsTo(models.Topic);
+      // Level_Topic.belongsTo(models.Level);
+      // Level_Topic.belongsTo(models.Topic);
     }
   }
   Level_Topic.init(
@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Level_Topic",
+      freezeTableName: true,
     }
   );
   return Level_Topic;

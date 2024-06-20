@@ -29,7 +29,7 @@ const customizeConfig = {
   dialect: process.env.DB_DIALECT,
   logging: false,
   define: {
-    timestamps: false,
+    // timestamps: false,
   },
   dialectOptions:
     // dateStrings: true,

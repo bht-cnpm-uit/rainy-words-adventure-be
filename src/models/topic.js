@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Topic.belongsToMany(models.Level, {
-        through: "Level_Topic",
-      });
-      Topic.hasMany(models.Word);
-      Topic.hasMany(models.Level_Topic);
+      // Topic.belongsToMany(models.Level, {
+      //   through: "Level_Topic",
+      // });
+      // Topic.hasMany(models.Word);
+      // Topic.hasMany(models.Level_Topic);
     }
   }
   Topic.init(

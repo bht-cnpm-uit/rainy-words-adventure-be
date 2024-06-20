@@ -23,17 +23,18 @@ const getAllGameLeaderboard = async (req, res) => {
 };
 
 const getNewGame = async (req, res) => {
-  let levelId = req.body.levelId;
-  let levelVocab = req.body.levelVocab;
-  if (!levelId || !levelVocab) {
+  const { levelid, levelvocab } = req.params;
+
+  if (!levelid || !levelvocab) {
     return res.status(500).json({
       errCode: 1,
       message: "Missing input parameters",
     });
   }
-  let listWord = await getRandomWords(levelId, levelVocab);
-  return res.status(200).json(listWord);
+  let response = await getRandomWords(levelid, levelvocab);
+  return res.status(200).json(response);
 };
+
 const postSaveGame = async (req, res) => {
   const { levelId, studentId, score } = req.body;
   if (!levelId || !studentId || !score) {
