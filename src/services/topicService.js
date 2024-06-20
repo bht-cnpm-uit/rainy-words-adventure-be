@@ -25,12 +25,12 @@ const getListTopic = async () => {
     }
   });
 };
-const createTopic = async (nameEn, nameVn) => {
+const createTopic = async (nameEn, nameVi) => {
   return new Promise(async (resolve, reject) => {
     try {
       let topic = await db.Topic.create({
         nameEn: nameEn,
-        nameVn: nameVn,
+        nameVi: nameVi,
       }).catch((err) => {
         console.log(err);
       });
@@ -49,29 +49,44 @@ const createTopic = async (nameEn, nameVn) => {
     }
   });
 };
-const deleteTopic = async (MaThamSo) => {
+
+const deleteTopic = async (topicId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      //? delete the rule
-      await db.ThamSo.destroy({
+      //? delete the word of topic
+      await db.Word.destroy({
         where: {
-          MaThamSo: MaThamSo,
+          topicId: topicId,
         },
       }).catch((err) => {
-        resolve({
+        return resolve({
           errCode: 2,
-          message: "Delete rule unsuccessfully!",
+          message: "Delete word of topic unsuccessfully!",
         });
       });
 
-      resolve({
+      //? delete the topic
+      await db.Topic.destroy({
+        where: {
+          id: topicId,
+        },
+      }).catch((err) => {
+        console.log(err);
+        return resolve({
+          errCode: 3,
+          message: "Delete topic unsuccessfully!",
+        });
+      });
+
+      return resolve({
         errCode: 0,
-        message: `Delete rule ${MaThamSo} successfully!`,
+        message: `Delete topic ${topicId} successfully!`,
       });
     } catch (error) {
-      reject({
+      console.log(error);
+      return reject({
         errCode: 3,
-        message: "Delete rule unsuccessfully!",
+        message: "Delete topic unsuccessfully!",
         error: error,
       });
     }

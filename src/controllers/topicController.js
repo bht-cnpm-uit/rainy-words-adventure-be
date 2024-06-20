@@ -10,25 +10,25 @@ const getAllTopic = async (req, res) => {
   return res.status(200).json(response);
 };
 const postCreateTopic = async (req, res) => {
-  const { nameEn, nameVn } = req.body;
-  if (!nameEn || !nameVn) {
+  const { nameEn, nameVi } = req.body;
+  if (!nameEn || !nameVi) {
     return res.status(500).json({
       message: "Missing input parameters",
       errCode: 1,
     });
   }
-  let response = await createTopic(nameEn, nameVn);
+  let response = await createTopic(nameEn, nameVi);
   return res.status(200).json(response);
 };
 const postDeleteTopic = async (req, res) => {
-  const { MaThamSo } = req.body;
-  if (!MaThamSo) {
+  const { topicId } = req.body;
+  if (!topicId) {
     return res.status(500).json({
       message: "Missing input parameters",
       errCode: 1,
     });
   }
-  let response = await deleteTopic(MaThamSo);
+  let response = await deleteTopic(topicId);
   return res.status(200).json(response);
 };
 const postUpdateTopic = async (req, res) => {
