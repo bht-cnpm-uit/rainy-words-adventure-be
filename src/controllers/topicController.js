@@ -32,14 +32,14 @@ const postDeleteTopic = async (req, res) => {
   return res.status(200).json(response);
 };
 const postUpdateTopic = async (req, res) => {
-  const { MaThamSo, GiaTri } = req.body;
-  if (!MaThamSo || !GiaTri) {
+  const { topicId, nameEn, nameVi } = req.body;
+  if (!topicId || !(nameEn || nameVi)) {
     return res.status(500).json({
       message: "Missing input parameters",
       errCode: 1,
     });
   }
-  let response = await updateTopic(MaThamSo, GiaTri);
+  let response = await updateTopic(topicId, nameEn, nameVi);
   return res.status(200).json(response);
 };
 module.exports = {

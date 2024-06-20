@@ -93,34 +93,35 @@ const deleteTopic = async (topicId) => {
   });
 };
 
-const updateTopic = async (MaThamSo, GiaTri) => {
+const updateTopic = async (topicId, nameEn, nameVi) => {
   return new Promise(async (resolve, reject) => {
     try {
       //? update role
-      await db.ThamSo.update(
+      await db.Topic.update(
         {
-          GiaTri: GiaTri,
+          nameEn,
+          nameVi,
         },
         {
           where: {
-            MaThamSo: MaThamSo,
+            id: topicId,
           },
         }
       ).catch((err) => {
         console.log(err);
         resolve({
           errCode: 0,
-          message: `Update rule ${MaThamSo} unsuccessfully!`,
+          message: `Update topic ${topicId} unsuccessfully!`,
         });
       });
       resolve({
         errCode: 0,
-        message: `Update rule ${MaThamSo} successfully!`,
+        message: `Update topic ${topicId} successfully!`,
       });
     } catch (error) {
       reject({
         errCode: 3,
-        message: `Update rule ${MaThamSo} unsuccessfully!`,
+        message: `Update topic ${topicId} unsuccessfully!`,
         error: error,
       });
     }
