@@ -25,24 +25,25 @@ const getListTopic = async () => {
     }
   });
 };
-const createTopic = async (Ten, GiaTri) => {
+const createTopic = async (nameEn, nameVn) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let rule = await db.ThamSo.create({
-        Ten: Ten,
-        GiaTri: GiaTri,
+      let topic = await db.Topic.create({
+        nameEn: nameEn,
+        nameVn: nameVn,
       }).catch((err) => {
         console.log(err);
       });
 
       resolve({
         errCode: 0,
-        message: "Create rule successfully!",
+        message: "Create topic successfully!",
+        topic: topic,
       });
     } catch (error) {
       reject({
         errCode: 2,
-        message: "Create rule unsuccessfully!",
+        message: "Create topic unsuccessfully!",
         error: error,
       });
     }

@@ -11,13 +11,13 @@ const getAllTopic = async (req, res) => {
 };
 const postCreateTopic = async (req, res) => {
   const { nameEn, nameVn } = req.body;
-  if (!Ten || !GiaTri) {
+  if (!nameEn || !nameVn) {
     return res.status(500).json({
       message: "Missing input parameters",
       errCode: 1,
     });
   }
-  let response = await createTopic(Ten, GiaTri);
+  let response = await createTopic(nameEn, nameVn);
   return res.status(200).json(response);
 };
 const postDeleteTopic = async (req, res) => {
