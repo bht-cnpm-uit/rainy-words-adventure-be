@@ -35,6 +35,13 @@ import {
   postUpdateItem,
 } from "../controllers/itemController";
 
+import {
+  getAllWord,
+  postCreateWord,
+  postDeleteWord,
+  postUpdateWord,
+} from "../controllers/wordController";
+
 let router = Router();
 
 let initWebRoutes = (app) => {
@@ -67,6 +74,12 @@ let initWebRoutes = (app) => {
   router.post("/item/create", postCreateItem);
   router.post("/item/delete", postDeleteItem);
   router.post("/item/update", postUpdateItem);
+
+  //! Word
+  router.get("/word/get-all", getAllWord);
+  router.post("/word/create", postCreateWord);
+  router.post("/word/delete", postDeleteWord);
+  router.post("/word/update", postUpdateWord);
 
   //! User api
 
