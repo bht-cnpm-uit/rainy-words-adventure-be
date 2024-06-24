@@ -28,6 +28,13 @@ import {
   postUpdateSchool,
 } from "../controllers/schoolController";
 
+import {
+  getAllItem,
+  postCreateItem,
+  postDeleteItem,
+  postUpdateItem,
+} from "../controllers/itemController";
+
 let router = Router();
 
 let initWebRoutes = (app) => {
@@ -55,6 +62,12 @@ let initWebRoutes = (app) => {
   router.post("/school/create", postCreateSchool);
   router.post("/school/delete", postDeleteSchool);
   router.post("/school/update", postUpdateSchool);
+  //! Item
+  router.get("/item/get-all", getAllItem);
+  router.post("/item/create", postCreateItem);
+  router.post("/item/delete", postDeleteItem);
+  router.post("/item/update", postUpdateItem);
+
   //! User api
 
   return app.use("/api", router);
