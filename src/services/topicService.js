@@ -13,13 +13,13 @@ const getListTopic = async () => {
       });
       resolve({
         errCode: 0,
-        message: "Get list rule successfully!",
+        message: "Get list topic successfully!",
         listTopic: listTopic,
       });
     } catch (error) {
       reject({
         errCode: 3,
-        message: "Get list rule unsuccessfully!",
+        message: "Get list topic unsuccessfully!",
         error: error,
       });
     }

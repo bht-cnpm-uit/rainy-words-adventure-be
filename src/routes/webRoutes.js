@@ -21,29 +21,41 @@ import {
   postUpdateTopic,
 } from "../controllers/topicController";
 
+import {
+  getAllSchool,
+  postCreateSchool,
+  postDeleteSchool,
+  postUpdateSchool,
+} from "../controllers/schoolController";
+
 let router = Router();
 
 let initWebRoutes = (app) => {
-  // user api
+  //! User api
   router.post("/login", handleLogin);
   router.post("/user/signup", handleSignUp);
   router.post("/user/update-info", handleUpdate);
-  //game api
+  //! Game api
   router.get("/leaderboard/", getGameLeaderboard);
   router.get("/leaderboard/get-all", getAllGameLeaderboard);
   router.get("/game/create-new-game/:levelid/:levelvocab", getNewGame);
   router.post("/game/save-game", postSaveGame);
 
-  // admin
+  //! Admin
   router.post("/exportdata", hanldExport);
 
-  //topic
+  //! Topic
   router.get("/topic/get-all", getAllTopic);
   router.post("/topic/create", postCreateTopic);
   router.post("/topic/delete", postDeleteTopic);
   router.post("/topic/update", postUpdateTopic);
 
-  //user api
+  //! School
+  router.get("/school/get-all", getAllSchool);
+  router.post("/school/create", postCreateSchool);
+  router.post("/school/delete", postDeleteSchool);
+  router.post("/school/update", postUpdateSchool);
+  //! User api
 
   return app.use("/api", router);
 };
