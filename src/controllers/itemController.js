@@ -3,7 +3,7 @@ import {
   createItem,
   deleteItem,
   updateItem,
-} from "../services/schoolService";
+} from "../services/itemService";
 
 const getAllItem = async (req, res) => {
   let response = await getListItem();
@@ -32,14 +32,14 @@ const postDeleteItem = async (req, res) => {
   return res.status(200).json(response);
 };
 const postUpdateItem = async (req, res) => {
-  const { schoolId, schoolName } = req.body;
-  if (!schoolId || !schoolName) {
+  const { itemId, itemName } = req.body;
+  if (!itemId || !itemName) {
     return res.status(500).json({
       message: "Missing input parameters",
       errCode: 1,
     });
   }
-  let response = await updateItem(schoolId, schoolName);
+  let response = await updateItem(itemId, itemName);
   return res.status(200).json(response);
 };
 module.exports = {

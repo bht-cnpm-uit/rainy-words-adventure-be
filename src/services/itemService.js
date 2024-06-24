@@ -3,7 +3,7 @@ import db from "../models/index";
 const getListItem = async () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let listSchool = await db.School.findAll({ raw: true }).catch((err) => {
+      let listItem = await db.Item.findAll({ raw: true }).catch((err) => {
         console.log(err);
         resolve({
           errCode: 2,
@@ -13,24 +13,24 @@ const getListItem = async () => {
       });
       resolve({
         errCode: 0,
-        message: "Get list school successfully!",
-        listSchool: listSchool,
+        message: "Get list item successfully!",
+        listItem: listItem,
       });
     } catch (error) {
       reject({
         errCode: 3,
-        message: "Get list school unsuccessfully!",
+        message: "Get list item unsuccessfully!",
         error: error,
       });
     }
   });
 };
-const createItem = async (listSchool) => {
+const createItem = async (listItem) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(listSchool);
+      console.log(listItem);
 
-      db.School.bulkCreate(listSchool)
+      db.Item.bulkCreate(listItem)
         .catch((err) => {
           console.log(err);
         })
@@ -38,12 +38,12 @@ const createItem = async (listSchool) => {
 
       resolve({
         errCode: 0,
-        message: "Create listSchool successfully!",
+        message: "Create listItem successfully!",
       });
     } catch (error) {
       reject({
         errCode: 2,
-        message: "Create listSchool unsuccessfully!",
+        message: "Create listItem unsuccessfully!",
         error: error,
       });
     }
@@ -54,60 +54,60 @@ const deleteItem = async (listId) => {
   return new Promise(async (resolve, reject) => {
     try {
       //? delete the word of topic
-      await db.School.destroy({
+      await db.Item.destroy({
         where: {
           id: listId,
         },
       }).catch((err) => {
         return resolve({
           errCode: 2,
-          message: "Delete list school unsuccessfully!",
+          message: "Delete list item unsuccessfully!",
         });
       });
 
       return resolve({
         errCode: 0,
-        message: `Delete school id: ${listId} successfully!`,
+        message: `Delete item id: ${listId} successfully!`,
       });
     } catch (error) {
       console.log(error);
       return reject({
         errCode: 3,
-        message: "Delete list school unsuccessfully!",
+        message: "Delete list item unsuccessfully!",
         error: error,
       });
     }
   });
 };
 
-const updateItem = async (schoolId, schoolName) => {
+const updateItem = async (itemId, itemName) => {
   return new Promise(async (resolve, reject) => {
     try {
       //? update role
-      await db.School.update(
+      await db.Item.update(
         {
-          name: schoolName,
+          name: itemName,
         },
         {
           where: {
-            id: schoolId,
+            id: itemId,
           },
         }
       ).catch((err) => {
         console.log(err);
         resolve({
           errCode: 0,
-          message: `Update school unsuccessfully!`,
+          message: `Update item unsuccessfully!`,
         });
       });
       resolve({
         errCode: 0,
-        message: `Update school ${schoolId} successfully!`,
+        message: `Update item ${itemId} successfully!`,
       });
     } catch (error) {
       reject({
         errCode: 3,
-        message: `Update school ${schoolId} unsuccessfully!`,
+        message: `Update school ${itemId} unsuccessfully!`,
         error: error,
       });
     }
