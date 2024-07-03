@@ -47,4 +47,17 @@ const postSaveGame = async (req, res) => {
   return res.status(200).json(response);
 };
 
-export { getGameLeaderboard, getAllGameLeaderboard, getNewGame, postSaveGame };
+const testApi = async (req, res) => {
+  return res.status(200).json({
+    errCode: 0,
+    message: "Test api successfully!",
+  });
+};
+
+export {
+  getGameLeaderboard,
+  getAllGameLeaderboard,
+  getNewGame,
+  postSaveGame,
+  testApi,
+};
