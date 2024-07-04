@@ -23,6 +23,9 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
+      cup: {
+        type: Sequelize.STRING,
+      },
       schoolId: {
         type: Sequelize.INTEGER,
       },
