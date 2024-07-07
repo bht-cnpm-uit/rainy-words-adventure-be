@@ -83,7 +83,6 @@ let initWebRoutes = (app) => {
   router.post("/word/update", postUpdateWord);
 
   //! User api
-
   router.get("/test", testApi);
 
   return app.use("/api", router);

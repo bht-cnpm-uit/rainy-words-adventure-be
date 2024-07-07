@@ -3,33 +3,24 @@ import bodyParser from "body-parser";
 import configViewEngine from "./config/viewEngine";
 import initWebRoutes from "./routes/webRoutes";
 import connectDatabase from "./config/connectDatabase";
+import cors from "cors"; // Added cors package
 
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 let app = express();
-app.use(function (req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader("Access-Control-Allow-Origin", "*");
 
-  // Request methods you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
+// Define allowed origin
+const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:5173';
 
-  // Request headers you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
+// Use cors to handle CORS
+app.use(cors({
+  origin: allowedOrigin, // Replace with your frontend domain
+  methods: "GET, POST, OPTIONS, PUT, PATCH, DELETE",
+  allowedHeaders: "X-Requested-With,content-type",
+  credentials: true
+}));
 
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader("Access-Control-Allow-Credentials", true);
-
-  // Pass to next layer of middleware
-  next();
-});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -41,5 +32,5 @@ connectDatabase();
 let port = process.env.PORT || 1000;
 
 app.listen(port, () => {
-  console.log("Backend rainy words adventure is running on the port: " + port);
+  console.log(`Backend rainy words adventure is running on port: ${port}`);
 });
