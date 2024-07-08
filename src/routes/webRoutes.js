@@ -5,6 +5,7 @@ import {
   handleSignUp,
   handleUpdate,
   handleChangePassword,
+  getAllStudent,
 } from "../controllers/userController";
 import { hanldExport } from "../controllers/adminController";
 import {
@@ -50,6 +51,8 @@ let initWebRoutes = (app) => {
   router.post("/login", handleLogin);
   router.post("/user/signup", handleSignUp);
   router.post("/user/update-info", handleUpdate);
+  router.get("/user/get-all-student", getAllStudent)
+
   //! Game api
   router.get("/leaderboard/", getGameLeaderboard);
   router.get("/leaderboard/get-all", getAllGameLeaderboard);

@@ -158,4 +158,37 @@ let handleUserUpdate = (
   });
 };
 
-export { handleUserLogin, handleUserSignUp, handleUserUpdate };
+let getListStudent = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let listStudent = await db.Student.findAll(
+        // { raw: true },
+        {
+          attributes: {
+            exclude: ['password'],
+          },
+        }
+      ).catch((err) => {
+        console.log(err);
+        resolve({
+          errCode: 2,
+          message: "Error in BE!",
+          error: err,
+        });
+      });
+      resolve({
+        errCode: 0,
+        message: "Get list users successfully!",
+        listStudent: listStudent,
+      });
+    } catch (error) {
+      reject({
+        errCode: 3,
+        message: "Get list users unsuccessfully!",
+        error: error,
+      });
+    }
+  });
+};
+
+export { handleUserLogin, handleUserSignUp, handleUserUpdate, getListStudent };
