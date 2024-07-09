@@ -25,20 +25,16 @@ const getListTopic = async () => {
     }
   });
 };
-const createTopic = async (nameEn, nameVi) => {
+const createTopic = async (listTopic) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let topic = await db.Topic.create({
-        nameEn: nameEn,
-        nameVi: nameVi,
-      }).catch((err) => {
+      db.Topic.bulkCreate(listTopic).catch((err) => {
         console.log(err);
       });
 
       resolve({
         errCode: 0,
-        message: "Create topic successfully!",
-        topic: topic,
+        message: "Create list topic successfully!",
       });
     } catch (error) {
       reject({
