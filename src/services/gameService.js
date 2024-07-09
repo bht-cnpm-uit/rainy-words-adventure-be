@@ -41,18 +41,21 @@ const getLeaderboardByGame = (levelId) => {
 const getLeaderboardAllGame = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await db.Game.findAll({
-        attributes: [
-          "studentId",
-          [db.sequelize.fn("sum", db.sequelize.col("score")), "total_score"],
-        ],
-        group: ["studentId"],
+      let query = `
+        SELECT students.id, students.name as Name, schools.name as School, SUM(score) AS Score
+        FROM students INNER JOIN 
+        (SELECT levelId, studentId, MAX(score) as score
+        FROM games
+        GROUP BY levelId, studentId) AS games
+          ON students.id = games.studentId 
+        INNER JOIN schools 
+          ON students.schoolId = schools.id
+        GROUP BY students.id, students.name, schools.name
+        ORDER BY score DESC
+      `;
 
-        include: {
-          model: db.Student,
-          attributes: ["name", "grade", "phonenumber"],
-        },
-        order: [["total_score", "DESC"]],
+      const result = await db.sequelize.query(query, {
+        type: db.sequelize.QueryTypes.SELECT,
       });
 
       if (result.length > 0) {
@@ -69,6 +72,7 @@ const getLeaderboardAllGame = () => {
         });
       }
     } catch (e) {
+      console.log(e);
       reject({
         message: "Fail to get leaderboard!",
         errCode: 2,
