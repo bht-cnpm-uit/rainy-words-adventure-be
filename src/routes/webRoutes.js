@@ -44,6 +44,15 @@ import {
   postUpdateWord,
 } from "../controllers/wordController";
 
+import {
+  getAllLevel,
+  postCreateLevel,
+  postUpdateLevel,
+  postDeleteLevel,
+  postAddTopicLevel,
+  postDeleteTopicLevel,
+} from "../controllers/levelController";
+
 let router = Router();
 
 let initWebRoutes = (app) => {
@@ -51,7 +60,7 @@ let initWebRoutes = (app) => {
   router.post("/login", handleLogin);
   router.post("/user/signup", handleSignUp);
   router.post("/user/update-info", handleUpdate);
-  router.get("/user/get-all-student", getAllStudent)
+  router.get("/user/get-all-student", getAllStudent);
 
   //! Game api
   router.get("/leaderboard/", getGameLeaderboard);
@@ -84,6 +93,14 @@ let initWebRoutes = (app) => {
   router.post("/word/create", postCreateWord);
   router.post("/word/delete", postDeleteWord);
   router.post("/word/update", postUpdateWord);
+
+  //! Level
+  router.get("/level/get-all", getAllLevel);
+  router.post("/level/create", postCreateLevel);
+  router.post("/level/update", postUpdateLevel);
+  router.post("/level/delete", postDeleteLevel);
+  router.post("/level/add-topic", postAddTopicLevel);
+  router.post("/level/delete-topic", postDeleteTopicLevel);
 
   //! User api
   router.get("/test", testApi);
