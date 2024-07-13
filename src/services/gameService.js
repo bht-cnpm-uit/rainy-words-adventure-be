@@ -11,7 +11,7 @@ const getLeaderboardByGame = (levelId) => {
           model: db.Student,
           attributes: ["name", "grade", "phonenumber"],
         },
-        attributes: ["score"],
+        attributes: ["score","updatedAt"],
         order: [["score", "DESC"]],
       });
 
@@ -42,9 +42,9 @@ const getLeaderboardAllGame = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let query = `
-        SELECT students.id, students.name as Name, schools.name as School, SUM(score) AS Score
-        FROM students INNER JOIN 
-        (SELECT levelId, studentId, MAX(score) as score
+        SELECT students.id, students.name as Name, schools.name as School,students.grade as Grade, SUM(score) AS Score,  DATE_FORMAT(MAX(games.LastTime), '%d/%m/%Y') AS LastTime
+        FROM students INNER JOIN
+        (SELECT levelId, studentId, MAX(score) as score, updatedAt as LastTime
         FROM games
         GROUP BY levelId, studentId) AS games
           ON students.id = games.studentId 
