@@ -28,7 +28,43 @@ const getListTopic = async () => {
 const createTopic = async (listTopic) => {
   return new Promise(async (resolve, reject) => {
     try {
-      db.Topic.bulkCreate(listTopic).catch((err) => {
+      //check before add topic:
+      const uniqueListTopic = Array.from(
+        new Set(listTopic.map((item) => JSON.stringify(item)))
+      ).map((item) => JSON.parse(item));
+
+      // Kiểm tra có phần tử bị lặp trong mảng truyền vào
+      if (listTopic.length !== uniqueListTopic.length) {
+        return resolve({
+          errCode: 4,
+          message: "Create list topic unsuccessfully!",
+          error: "There are duplicate elements in the input list topic.",
+        });
+      }
+
+      let currentListTopic = await db.Topic.findAll({
+        raw: true,
+        attributes: ["nameEn", "nameVi"],
+      });
+
+      const set1 = new Set(listTopic.map((item) => JSON.stringify(item)));
+      const set2 = new Set(
+        currentListTopic.map((item) => JSON.stringify(item))
+      );
+
+      // Kiểm tra xem có phần tử nào trong set1 tồn tại trong set2
+      const hasDuplicates = [...set1].some((item) => set2.has(item));
+
+      if (hasDuplicates) {
+        return resolve({
+          errCode: 5,
+          message: "Create list topic unsuccessfully!",
+          error:
+            "There are duplicate elements between input list topic and current list topic.",
+        });
+      }
+
+      await db.Topic.bulkCreate(listTopic).catch((err) => {
         console.log(err);
       });
 
