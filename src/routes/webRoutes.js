@@ -67,6 +67,10 @@ let initWebRoutes = (app) => {
   router.get("/leaderboard/get-all", getAllGameLeaderboard);
   router.get("/game/create-new-game/:levelid/:levelvocab", getNewGame);
   router.post("/game/save-game", postSaveGame);
+  //! Game item
+  router.get("/game-item/save");
+  router.get("/game-item/info/:studentid");
+  router.get("/game-item/check-up");
 
   //! Admin
   router.post("/exportdata", hanldExport);
@@ -101,6 +105,8 @@ let initWebRoutes = (app) => {
   router.post("/level/delete", postDeleteLevel);
   router.post("/level/add-topic", postAddTopicLevel);
   router.post("/level/delete-topic", postDeleteTopicLevel);
+  router.post("/level/unlock", postUnlockLevel);
+  router.get("/level/get-current/:studentid", getCurrentLevel);
 
   //! User api
   router.get("/test", testApi);
