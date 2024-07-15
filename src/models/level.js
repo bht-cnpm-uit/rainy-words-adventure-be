@@ -22,8 +22,6 @@ module.exports = (sequelize, DataTypes) => {
   Level.init(
     {
       name: DataTypes.STRING,
-    },
-    {
       difficulty: DataTypes.STRING,
     },
     {
