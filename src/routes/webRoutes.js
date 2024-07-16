@@ -35,6 +35,7 @@ import {
   postCreateItem,
   postDeleteItem,
   postUpdateItem,
+  getStudentItem,
 } from "../controllers/itemController";
 
 import {
@@ -92,6 +93,7 @@ let initWebRoutes = (app) => {
   router.post("/item/create", postCreateItem);
   router.post("/item/delete", postDeleteItem);
   router.post("/item/update", postUpdateItem);
+  router.get("/item/get-student/:id", getStudentItem);
 
   //! Word
   router.get("/word/get-all", getAllWord);

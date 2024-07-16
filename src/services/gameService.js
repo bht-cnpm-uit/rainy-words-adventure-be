@@ -123,6 +123,15 @@ const getRandomWords = (levelId, levelVocab) => {
   });
 };
 
+const getAchievement = (cup) => {
+  if (cup <= 0) return 0;
+  if (cup == 1) return 1;
+  if (cup == 2) return 2;
+  if (cup >= 3 && cup < 5) return 3;
+  if (cup >= 5 && cup < 7) return 4;
+  return 5;
+};
+
 const saveGame = (levelId, studentId, score, items, minScore = 200) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -157,22 +166,51 @@ const saveGame = (levelId, studentId, score, items, minScore = 200) => {
         console.log(err);
       });
 
-      let isGetCup = false;
+      let gainedCup = 0;
       // logic check if student's level up
       let afterItem = await currentItemsOfStudent(studentId);
 
       for (let i = 0; i < 6; i++) {
-        let countBefore = parseInt(beforeItem[i].count);
-        let countAfter = parseInt(afterItem[i].count);
+        let countBefore = Math.floor(parseInt(beforeItem[i].count) / 500);
+        let countAfter = Math.floor(parseInt(afterItem[i].count) / 500);
 
-        if (countBefore < 500 && countAfter > 500) isGetCup = true;
+        gainedCup = gainedCup + (countAfter - countBefore);
       }
+
+      let student = await db.Student.findOne({ where: { id: studentId } });
+      let beforeCup = student.cup;
+      let beforeAchievement = getAchievement(beforeCup);
+      let afterAchievement = getAchievement(beforeCup + gainedCup);
+      if (beforeAchievement != afterAchievement) {
+        console.log("Them danh hieu");
+        for (let j = beforeAchievement + 1; j <= afterAchievement; j++) {
+          await db.Achievement_Student.create({
+            studentId,
+            achievementId: j + 1,
+          });
+        }
+      }
+
+      if (gainedCup > 0) {
+        console.log("Tang cup");
+        await db.Student.increment(
+          {
+            cup: gainedCup,
+          },
+          {
+            where: {
+              id: studentId,
+            },
+          }
+        );
+      }
+      // Logic get achievement
 
       resolve({
         message: "Create game successfully!",
         errCode: 0,
         game: game,
-        isGetCup,
+        isGetCup: gainedCup > 0 ? true : false,
       });
     } catch (error) {
       console.log("🚀 ~ returnnewPromise ~ error:", error);
@@ -215,4 +253,5 @@ export {
   getLeaderboardAllGame,
   getRandomWords,
   saveGame,
+  currentItemsOfStudent,
 };
