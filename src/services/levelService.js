@@ -189,6 +189,73 @@ const deleteTopicLevel = async (levelId, listTopicId) => {
   });
 };
 
+const unlockLevel = async (levelId, studentId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { name, difficulty } = await db.Level.findOne({
+        where: { id: levelId },
+      });
+
+      let isUnlock = await db.Unlock.findOne({ where: { studentId, levelId } });
+
+      if (!isUnlock) {
+        //! Nếu chưa từng chơi màn đó thì tạo record
+        await db.Unlock.create({ studentId, levelId }).catch((err) => {
+          console.log(err);
+        });
+      }
+
+      resolve({
+        errCode: 0,
+        message: `Unlock (level: ${name} ; difficulty: ${difficulty}) successfully!`,
+      });
+    } catch (error) {
+      resolve({
+        errCode: 0,
+        message: `Unlock level (level: ${levelId} ; difficulty: ${difficulty}) unsuccessfully!`,
+        error,
+      });
+    }
+  });
+};
+
+const currentLevel = async (studentId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      //! Tạo ma trận level
+      let matrix = Array.from({ length: 3 }, () => Array(20).fill(0));
+
+      let listLevelId = await db.Unlock.findAll({
+        where: { studentId: studentId },
+        attributes: ["levelId"],
+        raw: true,
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      listLevelId = listLevelId.map((element) => element.levelId);
+
+      for (let levelId of listLevelId) {
+        let row = Math.floor(levelId / 20);
+        let col = (levelId % 20) - 1;
+        matrix[row][col] = 1;
+      }
+
+      resolve({
+        errCode: 0,
+        message: `Get current level of student ${studentId} successfully!`,
+        levelMatrix: matrix,
+      });
+    } catch (error) {
+      resolve({
+        errCode: 0,
+        message: `Get current level of student ${studentId} unsuccessfully!`,
+        error,
+      });
+    }
+  });
+};
+
 module.exports = {
   getListLevel,
   createLevel,
@@ -196,4 +263,6 @@ module.exports = {
   updateLevel,
   addTopicLevel,
   deleteTopicLevel,
+  unlockLevel,
+  currentLevel,
 };

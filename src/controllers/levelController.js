@@ -5,6 +5,8 @@ import {
   updateLevel,
   addTopicLevel,
   deleteTopicLevel,
+  unlockLevel,
+  currentLevel,
 } from "../services/levelService";
 
 const getAllLevel = async (req, res) => {
@@ -70,6 +72,29 @@ const postDeleteTopicLevel = async (req, res) => {
   return res.status(200).json(response);
 };
 
+const postUnlockLevel = async (req, res) => {
+  const { studentId, levelId } = req.body;
+  if (!levelId || !studentId) {
+    return res.status(500).json({
+      message: "Missing input parameters",
+      errCode: 1,
+    });
+  }
+  let response = await unlockLevel(levelId, studentId);
+  return res.status(200).json(response);
+};
+const getCurrentLevel = async (req, res) => {
+  const { studentid } = req.params;
+  if (!studentid) {
+    return res.status(500).json({
+      message: "Missing input parameters",
+      errCode: 1,
+    });
+  }
+  let response = await currentLevel(studentid);
+  return res.status(200).json(response);
+};
+
 module.exports = {
   getAllLevel,
   postCreateLevel,
@@ -77,4 +102,6 @@ module.exports = {
   postDeleteLevel,
   postAddTopicLevel,
   postDeleteTopicLevel,
+  postUnlockLevel,
+  getCurrentLevel,
 };

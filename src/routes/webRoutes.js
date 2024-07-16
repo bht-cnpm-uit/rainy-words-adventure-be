@@ -107,8 +107,8 @@ let initWebRoutes = (app) => {
   router.post("/level/delete", postDeleteLevel);
   router.post("/level/add-topic", postAddTopicLevel);
   router.post("/level/delete-topic", postDeleteTopicLevel);
-  // router.post("/level/unlock", postUnlockLevel);
-  // router.get("/level/get-current/:studentid", getCurrentLevel);
+  router.post("/level/unlock", postUnlockLevel);
+  router.get("/level/get-current/:studentid", getCurrentLevel);
 
   //! User api
   router.get("/test", testApi);
