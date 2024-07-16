@@ -236,10 +236,12 @@ const currentLevel = async (studentId) => {
       listLevelId = listLevelId.map((element) => element.levelId);
 
       for (let levelId of listLevelId) {
-        let row = Math.floor(levelId / 20);
-        let col = (levelId % 20) - 1;
+        let row = Math.ceil(levelId / 3) - 1;
+        let col = (levelId % 3) - 1;
         matrix[row][col] = 1;
       }
+
+      console.log(matrix);
 
       resolve({
         errCode: 0,
