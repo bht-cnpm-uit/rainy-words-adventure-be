@@ -190,33 +190,21 @@ const deleteTopicLevel = async (levelId, listTopicId) => {
 };
 
 const unlockLevel = async (levelId, studentId) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let { name, difficulty } = await db.Level.findOne({
-        where: { id: levelId },
-      });
-
-      let isUnlock = await db.Unlock.findOne({ where: { studentId, levelId } });
-
-      if (!isUnlock) {
-        //! Nếu chưa từng chơi màn đó thì tạo record
-        await db.Unlock.create({ studentId, levelId }).catch((err) => {
-          console.log(err);
-        });
-      }
-
-      resolve({
-        errCode: 0,
-        message: `Unlock (level: ${name} ; difficulty: ${difficulty}) successfully!`,
-      });
-    } catch (error) {
-      resolve({
-        errCode: 0,
-        message: `Unlock level (level: ${levelId} ; difficulty: ${difficulty}) unsuccessfully!`,
-        error,
-      });
-    }
+  await db.Level.findOne({
+    where: { id: levelId },
   });
+
+  let isUnlock = await db.Unlock.findOne({ where: { studentId, levelId } });
+
+  if (!isUnlock) {
+    //! Nếu chưa từng chơi màn đó thì tạo record
+    await db.Unlock.create({ studentId, levelId }).catch((err) => {
+      console.log(err);
+    });
+    console.log("Màn này chưa chơi");
+  } else {
+    console.log("Màn này đã chơi rồi");
+  }
 };
 
 const currentLevel = async (studentId) => {

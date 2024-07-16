@@ -1,5 +1,7 @@
 import db from "../models/index";
 
+import { unlockLevel } from "./levelService";
+
 const getLeaderboardByGame = (levelId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -121,7 +123,7 @@ const getRandomWords = (levelId, levelVocab) => {
   });
 };
 
-const saveGame = (levelId, studentId, score, items) => {
+const saveGame = (levelId, studentId, score, items, minScore = 200) => {
   return new Promise(async (resolve, reject) => {
     try {
       let beforeItem = await currentItemsOfStudent(studentId);
@@ -134,6 +136,13 @@ const saveGame = (levelId, studentId, score, items) => {
       }).catch((err) => {
         console.log(err);
       });
+      //! Nếu điểm lớn hơn điểm tối thiểu thì unlock level
+      if (score > minScore) {
+        unlockLevel(levelId, studentId);
+        console.log("Vượt qua level");
+      } else {
+        console.log("Không vượt qua level");
+      }
 
       // Thêm student id vào
       items = items.map((element) => {
