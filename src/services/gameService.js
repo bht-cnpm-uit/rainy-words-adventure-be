@@ -121,9 +121,12 @@ const getRandomWords = (levelId, levelVocab) => {
   });
 };
 
-const saveGame = (levelId, studentId, score) => {
+const saveGame = (levelId, studentId, score, items) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let beforeItem = await currentItemsOfStudent(studentId);
+
+      // Lưu record game
       let game = await db.Game.create({
         levelId: levelId,
         studentId: studentId,
@@ -132,13 +135,35 @@ const saveGame = (levelId, studentId, score) => {
         console.log(err);
       });
 
-      let isLevelUp = false;
+      // Thêm student id vào
+      items = items.map((element) => {
+        return {
+          ...element,
+          studentId,
+        };
+      });
+
+      // Lưu số item kiếm được
+      await db.Student_Item.bulkCreate(items).catch((err) => {
+        console.log(err);
+      });
+
+      let isGetCup = false;
       // logic check if student's level up
+      let afterItem = await currentItemsOfStudent(studentId);
+
+      for (let i = 0; i < 6; i++) {
+        let countBefore = parseInt(beforeItem[i].count);
+        let countAfter = parseInt(afterItem[i].count);
+
+        if (countBefore < 500 && countAfter > 500) isGetCup = true;
+      }
+
       resolve({
         message: "Create game successfully!",
         errCode: 0,
         game: game,
-        isLevelUp: isLevelUp,
+        isGetCup,
       });
     } catch (error) {
       console.log("🚀 ~ returnnewPromise ~ error:", error);
@@ -148,6 +173,32 @@ const saveGame = (levelId, studentId, score) => {
       });
     }
   });
+};
+
+const currentItemsOfStudent = async (studentId) => {
+  let query = `
+        SELECT id, name, count
+    FROM items LEFT JOIN
+        (SELECT itemId, SUM(quantity) AS "count" 
+        FROM student_item
+        WHERE studentId = ?
+        GROUP BY itemId 
+        ORDER BY itemId) AS COUNT_ITEM
+    ON items.id = COUNT_ITEM.itemId
+  `;
+  let currentItem = await db.sequelize.query(query, {
+    replacements: [studentId],
+    type: db.sequelize.QueryTypes.SELECT,
+  });
+
+  currentItem = currentItem.map((element) => {
+    return {
+      ...element,
+      count: element.count || 0,
+    };
+  });
+
+  return currentItem;
 };
 
 export {
