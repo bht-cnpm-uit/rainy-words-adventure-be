@@ -11,7 +11,7 @@ const getLeaderboardByGame = (levelId) => {
           model: db.Student,
           attributes: ["name", "grade", "phonenumber"],
         },
-        attributes: ["score","updatedAt"],
+        attributes: ["score", "updatedAt"],
         order: [["score", "DESC"]],
       });
 
