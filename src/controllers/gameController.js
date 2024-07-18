@@ -36,14 +36,14 @@ const getNewGame = async (req, res) => {
 };
 
 const postSaveGame = async (req, res) => {
-  const { levelId, studentId, score } = req.body;
-  if (!levelId || !studentId || !score) {
+  const { levelId, studentId, score, items } = req.body;
+  if (!levelId || !studentId || !score || !items) {
     return res.status(500).json({
       errCode: 1,
       message: "Missing input parameters",
     });
   }
-  let response = await saveGame(levelId, studentId, score);
+  let response = await saveGame(levelId, studentId, score, items);
   return res.status(200).json(response);
 };
 

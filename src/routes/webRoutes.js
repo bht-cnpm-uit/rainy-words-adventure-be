@@ -6,6 +6,7 @@ import {
   handleUpdate,
   handleChangePassword,
   getAllStudent,
+  getStudentAchievement,
 } from "../controllers/userController";
 import { hanldExport } from "../controllers/adminController";
 import {
@@ -35,6 +36,7 @@ import {
   postCreateItem,
   postDeleteItem,
   postUpdateItem,
+  getStudentItem,
 } from "../controllers/itemController";
 
 import {
@@ -51,6 +53,7 @@ import {
   postDeleteLevel,
   postAddTopicLevel,
   postDeleteTopicLevel,
+  getCurrentLevel,
 } from "../controllers/levelController";
 
 let router = Router();
@@ -61,12 +64,17 @@ let initWebRoutes = (app) => {
   router.post("/user/signup", handleSignUp);
   router.post("/user/update-info", handleUpdate);
   router.get("/user/get-all-student", getAllStudent);
+  router.get("/user/get-achievement/:id", getStudentAchievement);
 
   //! Game api
   router.get("/leaderboard/", getGameLeaderboard);
   router.get("/leaderboard/get-all", getAllGameLeaderboard);
   router.get("/game/create-new-game/:levelid/:levelvocab", getNewGame);
   router.post("/game/save-game", postSaveGame);
+  //! Game item
+  router.get("/game-item/save");
+  router.get("/game-item/info/:studentid");
+  router.get("/game-item/check-up");
 
   //! Admin
   router.post("/exportdata", hanldExport);
@@ -87,6 +95,7 @@ let initWebRoutes = (app) => {
   router.post("/item/create", postCreateItem);
   router.post("/item/delete", postDeleteItem);
   router.post("/item/update", postUpdateItem);
+  router.get("/item/get-student/:id", getStudentItem);
 
   //! Word
   router.get("/word/get-all", getAllWord);
@@ -101,6 +110,7 @@ let initWebRoutes = (app) => {
   router.post("/level/delete", postDeleteLevel);
   router.post("/level/add-topic", postAddTopicLevel);
   router.post("/level/delete-topic", postDeleteTopicLevel);
+  router.get("/level/get-current/:studentid", getCurrentLevel);
 
   //! User api
   router.get("/test", testApi);

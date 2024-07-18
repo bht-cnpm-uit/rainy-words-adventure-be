@@ -165,7 +165,7 @@ let getListStudent = () => {
         // { raw: true },
         {
           attributes: {
-            exclude: ['password'],
+            exclude: ["password"],
           },
         }
       ).catch((err) => {
@@ -191,4 +191,48 @@ let getListStudent = () => {
   });
 };
 
-export { handleUserLogin, handleUserSignUp, handleUserUpdate, getListStudent };
+let studentAchievement = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let query = `
+        SELECT achievementId AS id, name
+        FROM achievement_student 
+        INNER JOIN achievements
+        ON achievement_student.achievementId = achievements.id
+        WHERE studentId = ?
+      `;
+      let listAchievement = await db.sequelize
+        .query(query, {
+          replacements: [id],
+          type: db.sequelize.QueryTypes.SELECT,
+        })
+        .catch((err) => {
+          console.log(err);
+          resolve({
+            errCode: 2,
+            message: "Error in BE!",
+            error: err,
+          });
+        });
+      resolve({
+        errCode: 0,
+        message: "Get list achievement successfully!",
+        listAchievement,
+      });
+    } catch (error) {
+      reject({
+        errCode: 3,
+        message: "Get list achievement unsuccessfully!",
+        error: error,
+      });
+    }
+  });
+};
+
+export {
+  handleUserLogin,
+  handleUserSignUp,
+  handleUserUpdate,
+  getListStudent,
+  studentAchievement,
+};
