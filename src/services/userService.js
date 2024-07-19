@@ -229,10 +229,49 @@ let studentAchievement = (id) => {
   });
 };
 
+let studentInfomation = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let student = await db.Student.findOne({
+        where: {
+          id,
+        },
+      }).catch((err) => {
+        console.log(err);
+        resolve({
+          errCode: 2,
+          message: "Error in BE!",
+          error: err,
+        });
+      });
+
+      if (!student) {
+        return resolve({
+          errCode: 6,
+          message: "Student does not exist!",
+        });
+      }
+
+      resolve({
+        errCode: 0,
+        message: "Get student information successfully!",
+        student,
+      });
+    } catch (error) {
+      reject({
+        errCode: 3,
+        message: "Get student information unsuccessfully!",
+        error: error,
+      });
+    }
+  });
+};
+
 export {
   handleUserLogin,
   handleUserSignUp,
   handleUserUpdate,
   getListStudent,
   studentAchievement,
+  studentInfomation,
 };
