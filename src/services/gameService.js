@@ -84,7 +84,60 @@ const getLeaderboardAllGame = () => {
   });
 };
 
-const getRandomWords = (levelId, levelVocab) => {
+const getWordsByProbability = (words, probabilities, numWords) => {
+  // Phân loại các từ theo mức độ khó
+  const levels = {
+    Beginner: [],
+    Intermediate: [],
+    Advanced: [],
+  };
+
+  words.forEach((word) => {
+    if (levels[word.levelVocab]) {
+      levels[word.levelVocab].push(word);
+    }
+  });
+
+  // Tính số lượng từ cần lấy cho mỗi mức độ khó
+  const beginnerCount = Math.floor(probabilities[0] * numWords);
+  const intermediateCount = Math.floor(probabilities[1] * numWords);
+  const advancedCount = Math.floor(probabilities[2] * numWords);
+
+  let result = [];
+
+  // Hàm để lấy từ từ mức độ khó cụ thể
+  const getWords = (level, count) => {
+    let selectedWords = [];
+    while (count > 0) {
+      if (levels[level].length > 0) {
+        selectedWords.push(levels[level].shift());
+        count--;
+      } else {
+        if (level === "Advanced") {
+          level = "Intermediate";
+        } else if (level === "Intermediate") {
+          level = "Beginner";
+        } else {
+          break;
+        }
+      }
+    }
+    return selectedWords;
+  };
+
+  result = result.concat(getWords("Advanced", advancedCount));
+  result = result.concat(getWords("Intermediate", intermediateCount));
+  result = result.concat(getWords("Beginner", beginnerCount));
+
+  // Kiểm tra nếu vẫn chưa đủ số lượng từ yêu cầu thì lấy thêm từ mức độ Beginner
+  if (result.length < numWords) {
+    result = result.concat(getWords("Beginner", numWords - result.length));
+  }
+
+  return result;
+};
+
+const getRandomWords = (levelId, probabilities, numWords) => {
   return new Promise(async (resolve, reject) => {
     try {
       let listTopic = await db.Level_Topic.findAll({
@@ -101,20 +154,24 @@ const getRandomWords = (levelId, levelVocab) => {
       for (let topicId of listTopic) {
         let listWord = await db.Word.findAll({
           where: {
-            levelVocab: levelVocab,
             topicId: topicId,
           },
           order: db.Sequelize.literal("rand()"),
-          limit: 5,
         });
 
         listRandomWord = listRandomWord.concat(listWord);
       }
 
+      let listRandomWordByProbability = getWordsByProbability(
+        listRandomWord,
+        probabilities,
+        numWords
+      );
+
       resolve({
         message: "Get list word successfully!",
         errCode: 0,
-        listWord: listRandomWord,
+        listWord: listRandomWordByProbability,
       });
     } catch (error) {
       console.log(error);
@@ -146,10 +203,13 @@ const saveGame = (levelId, studentId, score, items, minScore = 200) => {
         console.log(err);
       });
       //! Nếu điểm lớn hơn điểm tối thiểu thì unlock level
+      let isPassLevel = true;
       if (score > minScore) {
         unlockLevel(levelId, studentId);
+
         console.log("Vượt qua level");
       } else {
+        isPassLevel = false;
         console.log("Không vượt qua level");
       }
 
@@ -211,6 +271,7 @@ const saveGame = (levelId, studentId, score, items, minScore = 200) => {
         errCode: 0,
         game: game,
         isGetCup: gainedCup > 0 ? true : false,
+        isPassLevel,
       });
     } catch (error) {
       console.log("🚀 ~ returnnewPromise ~ error:", error);

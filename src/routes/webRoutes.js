@@ -12,7 +12,7 @@ import { hanldExport } from "../controllers/adminController";
 import {
   getGameLeaderboard,
   getAllGameLeaderboard,
-  getNewGame,
+  postNewGame,
   postSaveGame,
   testApi,
 } from "../controllers/gameController";
@@ -69,12 +69,8 @@ let initWebRoutes = (app) => {
   //! Game api
   router.get("/leaderboard/", getGameLeaderboard);
   router.get("/leaderboard/get-all", getAllGameLeaderboard);
-  router.get("/game/create-new-game/:levelid/:levelvocab", getNewGame);
+  router.post("/game/create-new-game", postNewGame);
   router.post("/game/save-game", postSaveGame);
-  //! Game item
-  router.get("/game-item/save");
-  router.get("/game-item/info/:studentid");
-  router.get("/game-item/check-up");
 
   //! Admin
   router.post("/exportdata", hanldExport);
