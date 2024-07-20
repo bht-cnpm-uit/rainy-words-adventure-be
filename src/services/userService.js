@@ -263,13 +263,12 @@ let studentInfomation = (id) => {
       WHERE studentId = ?
       GROUP BY studentId
       `;
-
       let studentGames = await db.sequelize.query(query, {
         type: db.sequelize.QueryTypes.SELECT,
         replacements: [id],
       });
-      student.score = studentGames[0].score;
-
+      if (studentGames.length > 0) student.score = studentGames[0].score;
+      else student.score = 0;
       resolve({
         errCode: 0,
         message: "Get student information successfully!",
