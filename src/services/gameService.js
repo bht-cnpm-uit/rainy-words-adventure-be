@@ -62,15 +62,15 @@ const getLeaderboardAllGame = () => {
 
       if (result.length > 0) {
         resolve({
-          message: "Get learderboard successfully!",
+          message: "Get leaderboard successfully!",
           errCode: 0,
           leaderboard: result,
         });
       } else {
         resolve({
-          message: "Level does not have any student passing!",
-          errCode: 1,
-          leaderboard: result,
+          message: "Leaderboard has no records!",
+          errCode: 2,
+          leaderboard: [],
         });
       }
     } catch (e) {
