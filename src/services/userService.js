@@ -256,6 +256,20 @@ let studentInfomation = (id) => {
         });
       }
 
+      //? Get score of student
+      let query = `
+      SELECT studentId, SUM(score) AS score
+      FROM games
+      WHERE studentId = ?
+      GROUP BY studentId
+      `;
+
+      let studentGames = await db.sequelize.query(query, {
+        type: db.sequelize.QueryTypes.SELECT,
+        replacements: [id],
+      });
+      student.score = studentGames[0].score;
+
       resolve({
         errCode: 0,
         message: "Get student information successfully!",
