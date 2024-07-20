@@ -132,17 +132,21 @@ let handleUserUpdate = (
 
         let hashNewPassword = bcrypt.hashSync(newPassword, salt);
 
-        await student
-          .update({
+        await db.Student.update(
+          {
             schoolId: schoolId,
             grade: grade,
             birthday: birthday,
             password: hashNewPassword,
-          })
-          .catch((err) => console.log(err));
+          },
+          {
+            where: {
+              id: student.id,
+            },
+          }
+        ).catch((err) => console.log(err));
 
         resolve({
-          studentInfo: student,
           message: "Update student successfully",
           errCode: "0",
         });
