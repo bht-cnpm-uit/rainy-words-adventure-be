@@ -101,7 +101,8 @@ let handleUserUpdate = (
   phoneNumber,
   oldPassword,
   newPassword,
-  isForgotPassword
+  isForgotPassword,
+  name
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -131,13 +132,13 @@ let handleUserUpdate = (
         }
 
         let hashNewPassword = bcrypt.hashSync(newPassword, salt);
-
         await db.Student.update(
           {
-            schoolId: schoolId,
-            grade: grade,
-            birthday: birthday,
+            schoolId,
+            grade,
+            birthday,
             password: hashNewPassword,
+            name,
           },
           {
             where: {

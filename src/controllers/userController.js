@@ -51,6 +51,7 @@ let handleUpdate = async (req, res) => {
     oldPassword,
     newPassword,
     isForgotPassword,
+    name,
   } = req.body;
 
   let response = await handleUserUpdate(
@@ -60,7 +61,8 @@ let handleUpdate = async (req, res) => {
     phoneNumber,
     oldPassword,
     newPassword,
-    isForgotPassword
+    isForgotPassword,
+    name
   );
   return res.status(200).json(response);
 };
