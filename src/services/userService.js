@@ -101,7 +101,8 @@ let handleUserUpdate = (
   phoneNumber,
   oldPassword,
   newPassword,
-  isForgotPassword
+  isForgotPassword,
+  name
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -131,18 +132,22 @@ let handleUserUpdate = (
         }
 
         let hashNewPassword = bcrypt.hashSync(newPassword, salt);
-
-        await student
-          .update({
-            schoolId: schoolId,
-            grade: grade,
-            birthday: birthday,
+        await db.Student.update(
+          {
+            schoolId,
+            grade,
+            birthday,
             password: hashNewPassword,
-          })
-          .catch((err) => console.log(err));
+            name,
+          },
+          {
+            where: {
+              id: student.id,
+            },
+          }
+        ).catch((err) => console.log(err));
 
         resolve({
-          studentInfo: student,
           message: "Update student successfully",
           errCode: "0",
         });
@@ -229,10 +234,62 @@ let studentAchievement = (id) => {
   });
 };
 
+let studentInfomation = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let student = await db.Student.findOne({
+        where: {
+          id,
+        },
+      }).catch((err) => {
+        console.log(err);
+        resolve({
+          errCode: 2,
+          message: "Error in BE!",
+          error: err,
+        });
+      });
+
+      if (!student) {
+        return resolve({
+          errCode: 6,
+          message: "Student does not exist!",
+        });
+      }
+
+      //? Get score of student
+      let query = `
+      SELECT studentId, SUM(score) AS score
+      FROM games
+      WHERE studentId = ?
+      GROUP BY studentId
+      `;
+      let studentGames = await db.sequelize.query(query, {
+        type: db.sequelize.QueryTypes.SELECT,
+        replacements: [id],
+      });
+      if (studentGames.length > 0) student.score = studentGames[0].score;
+      else student.score = 0;
+      resolve({
+        errCode: 0,
+        message: "Get student information successfully!",
+        student,
+      });
+    } catch (error) {
+      reject({
+        errCode: 3,
+        message: "Get student information unsuccessfully!",
+        error: error,
+      });
+    }
+  });
+};
+
 export {
   handleUserLogin,
   handleUserSignUp,
   handleUserUpdate,
   getListStudent,
   studentAchievement,
+  studentInfomation,
 };

@@ -5,6 +5,7 @@ import {
   handleUserChangePassword,
   getListStudent,
   studentAchievement,
+  studentInfomation,
 } from "../services/userService";
 // example login
 
@@ -50,6 +51,7 @@ let handleUpdate = async (req, res) => {
     oldPassword,
     newPassword,
     isForgotPassword,
+    name,
   } = req.body;
 
   let response = await handleUserUpdate(
@@ -59,7 +61,8 @@ let handleUpdate = async (req, res) => {
     phoneNumber,
     oldPassword,
     newPassword,
-    isForgotPassword
+    isForgotPassword,
+    name
   );
   return res.status(200).json(response);
 };
@@ -88,6 +91,18 @@ let getStudentAchievement = async (req, res) => {
   return res.status(200).json(response);
 };
 
+let getStudentInfomation = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(500).json({
+      errCode: 1,
+      message: "Missing input parameter !",
+    });
+  }
+  let response = await studentInfomation(id);
+  return res.status(200).json(response);
+};
+
 export {
   handleLogin,
   handleSignUp,
@@ -95,4 +110,5 @@ export {
   handleChangePassword,
   getAllStudent,
   getStudentAchievement,
+  getStudentInfomation,
 };

@@ -22,16 +22,33 @@ const getAllGameLeaderboard = async (req, res) => {
   return res.status(200).json(leaderboad);
 };
 
-const getNewGame = async (req, res) => {
-  const { levelid, levelvocab } = req.params;
+const postNewGame = async (req, res) => {
+  const { levelId, probabilities = [0.4, 0.4, 0.2], numWords = 10 } = req.body;
+  let sumP = probabilities.reduce((sum, p) => sum + p, 0);
 
-  if (!levelid || !levelvocab) {
+  let maxP = Math.max(...probabilities);
+  let minP = Math.min(...probabilities);
+
+  if (sumP != 1) {
+    return res.status(200).json({
+      errCode: 99,
+      message: "Sum of probabilities must equal 1!",
+    });
+  }
+  if (minP < 0 || maxP > 1) {
+    return res.status(200).json({
+      errCode: 999,
+      message: "Probabilities must be in range [0, 1]!",
+    });
+  }
+
+  if (!levelId) {
     return res.status(500).json({
       errCode: 1,
       message: "Missing input parameters",
     });
   }
-  let response = await getRandomWords(levelid, levelvocab);
+  let response = await getRandomWords(levelId, probabilities, numWords);
   return res.status(200).json(response);
 };
 
@@ -57,7 +74,7 @@ const testApi = async (req, res) => {
 export {
   getGameLeaderboard,
   getAllGameLeaderboard,
-  getNewGame,
+  postNewGame,
   postSaveGame,
   testApi,
 };
