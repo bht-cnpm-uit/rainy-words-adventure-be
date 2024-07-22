@@ -44,16 +44,58 @@ const getLeaderboardAllGame = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let query = `
-        SELECT students.id, students.name as Name, schools.name as School,students.grade as Grade, SUM(score) AS Score,  DATE_FORMAT(MAX(games.LastTime), '%d/%m/%Y') AS LastTime
-        FROM students INNER JOIN
-        (SELECT levelId, studentId, MAX(score) as score, updatedAt as LastTime
-        FROM games
-        GROUP BY levelId, studentId) AS games
-          ON students.id = games.studentId 
-        INNER JOIN schools 
-          ON students.schoolId = schools.id
-        GROUP BY students.id, students.name, schools.name
-        ORDER BY score DESC
+        SELECT
+            students.id,
+            students.name AS Name,
+            schools.name AS School,
+            students.grade AS Grade,
+            SUM(score) AS Score,
+            DATE_FORMAT(MAX(games.LastTime),
+            '%d/%m/%Y') AS LastTime,
+            totalTime as TotalTime
+        FROM
+            students
+        INNER JOIN(
+            WITH
+                ranked_scores AS(
+                SELECT
+                    studentId,
+                    levelId,
+                    score,
+                    updatedAt,
+                    TIMESTAMPDIFF(SECOND, createdAt, updatedAt) AS totalTime,
+                    ROW_NUMBER() OVER(
+                    PARTITION BY studentId,
+                    levelId
+                ORDER BY
+                    score
+                DESC
+                    ,
+                    TIMESTAMPDIFF(SECOND, createdAt, updatedAt) ASC
+                ) AS row_num
+            FROM
+                games)
+                SELECT
+                    studentId,
+                    levelId,
+                    score,
+                    totalTime,
+                updatedAt as LastTime
+                FROM
+                    ranked_scores
+                WHERE
+                    row_num = 1
+            ) AS games
+        ON
+            students.id = games.studentId
+        INNER JOIN schools ON students.schoolId = schools.id
+        GROUP BY
+            students.id,
+            students.name,
+            schools.name
+        ORDER BY
+            score
+        DESC
       `;
 
       const result = await db.sequelize.query(query, {
@@ -189,16 +231,22 @@ const getAchievement = (cup) => {
   return 5;
 };
 
-const saveGame = (levelId, studentId, score, items, minScore = 200) => {
+const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
   return new Promise(async (resolve, reject) => {
     try {
       let beforeItem = await currentItemsOfStudent(studentId);
+      const endTime = new Date();
+      console.log(time);
+      const startTime = new Date(endTime.getTime() - time * 1000);
 
+      console.log("Original time:", endTime);
+      console.log("New time:", startTime);
       // Lưu record game
       let game = await db.Game.create({
         levelId: levelId,
         studentId: studentId,
         score: score,
+        createdAt: startTime,
       }).catch((err) => {
         console.log(err);
       });
