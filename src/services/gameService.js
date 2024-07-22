@@ -130,9 +130,16 @@ const getWordsByProbability = (words, probabilities, numWords) => {
   result = result.concat(getWords("Easy", easyCount));
 
   // Kiểm tra nếu vẫn chưa đủ số lượng từ yêu cầu thì lấy thêm từ mức độ Beginner
-  if (result && result.length < numWords) {
+  if (result.length < numWords) {
     result = result.concat(getWords("Easy", numWords - result.length));
   }
+  if (result.length < numWords) {
+    result = result.concat(getWords("Medium", numWords - result.length));
+  }
+  if (result.length < numWords) {
+    result = result.concat(getWords("Hard", numWords - result.length));
+  }
+
 
   return result;
 };
