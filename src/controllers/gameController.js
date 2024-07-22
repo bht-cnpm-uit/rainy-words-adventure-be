@@ -25,7 +25,7 @@ const getAllGameLeaderboard = async (req, res) => {
 const postNewGame = async (req, res) => {
   const { levelId, probabilities = [0.4, 0.4, 0.2], numWords = 10 } = req.body;
   let sumP = probabilities.reduce((sum, p) => sum + p, 0);
-
+  sumP = Math.round(sumP * 1e10) / 1e10
   let maxP = Math.max(...probabilities);
   let minP = Math.min(...probabilities);
 

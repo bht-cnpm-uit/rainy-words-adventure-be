@@ -129,9 +129,9 @@ const getLeaderboardAllGame = () => {
 const getWordsByProbability = (words, probabilities, numWords) => {
   // Phân loại các từ theo mức độ khó
   const levels = {
-    Beginner: [],
-    Intermediate: [],
-    Advanced: [],
+    Easy: [],
+    Medium: [],
+    Hard: [],
   };
 
   words.forEach((word) => {
@@ -141,9 +141,9 @@ const getWordsByProbability = (words, probabilities, numWords) => {
   });
 
   // Tính số lượng từ cần lấy cho mỗi mức độ khó
-  const beginnerCount = Math.floor(probabilities[0] * numWords);
-  const intermediateCount = Math.floor(probabilities[1] * numWords);
-  const advancedCount = Math.floor(probabilities[2] * numWords);
+  const easyCount = Math.floor(probabilities[0] * numWords);
+  const mediumCount = Math.floor(probabilities[1] * numWords);
+  const hardCount = Math.floor(probabilities[2] * numWords);
 
   let result = [];
 
@@ -155,10 +155,10 @@ const getWordsByProbability = (words, probabilities, numWords) => {
         selectedWords.push(levels[level].shift());
         count--;
       } else {
-        if (level === "Advanced") {
-          level = "Intermediate";
-        } else if (level === "Intermediate") {
-          level = "Beginner";
+        if (level === "Hard") {
+          level = "Medium";
+        } else if (level === "Medium") {
+          level = "Easy";
         } else {
           break;
         }
@@ -167,13 +167,13 @@ const getWordsByProbability = (words, probabilities, numWords) => {
     return selectedWords;
   };
 
-  result = result.concat(getWords("Advanced", advancedCount));
-  result = result.concat(getWords("Intermediate", intermediateCount));
-  result = result.concat(getWords("Beginner", beginnerCount));
+  result = result.concat(getWords("Hard", hardCount));
+  result = result.concat(getWords("Medium", mediumCount));
+  result = result.concat(getWords("Easy", easyCount));
 
   // Kiểm tra nếu vẫn chưa đủ số lượng từ yêu cầu thì lấy thêm từ mức độ Beginner
-  if (result.length < numWords) {
-    result = result.concat(getWords("Beginner", numWords - result.length));
+  if (result && result.length < numWords) {
+    result = result.concat(getWords("Easy", numWords - result.length));
   }
 
   return result;
@@ -190,7 +190,7 @@ const getRandomWords = (levelId, probabilities, numWords) => {
       }).then((levels) => {
         return levels.map((level) => level.topicId);
       });
-
+      console.log(listTopic)
       let listRandomWord = [];
 
       for (let topicId of listTopic) {
@@ -203,13 +203,12 @@ const getRandomWords = (levelId, probabilities, numWords) => {
 
         listRandomWord = listRandomWord.concat(listWord);
       }
-
       let listRandomWordByProbability = getWordsByProbability(
         listRandomWord,
         probabilities,
         numWords
       );
-
+      console.log("chck random: ", listRandomWordByProbability)
       resolve({
         message: "Get list word successfully!",
         errCode: 0,
