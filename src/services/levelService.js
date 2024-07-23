@@ -207,11 +207,31 @@ const unlockLevel = async (levelId, studentId) => {
   }
 };
 
+const getMaxScoreOfLeveL = (studentId, levelId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let maxScore = await db.Game.max("score", {
+        where: {
+          studentId,
+          levelId,
+        },
+      });
+
+      return resolve(maxScore);
+    } catch (error) {
+      console.log("🚀 ~ returnnewPromise ~ error:", error);
+      resolve("Error in BE");
+    }
+  });
+};
+
 const currentLevel = async (studentId) => {
   return new Promise(async (resolve, reject) => {
     try {
       //! Tạo ma trận level
-      let matrix = Array.from({ length: 3 }, () => Array(20).fill(0));
+      let levelMatrix = Array.from({ length: 3 }, () => Array(20).fill(0));
+
+      let scoreMatrix = Array.from({ length: 3 }, () => Array(20).fill(0));
 
       let listLevelId = await db.Unlock.findAll({
         where: { studentId: studentId },
@@ -228,15 +248,20 @@ const currentLevel = async (studentId) => {
         let col = Math.ceil(levelId / 3) - 1;
         console.log(row);
         console.log(col);
-        matrix[row][col] = 1;
+        levelMatrix[row][col] = 1;
+        let levelScore = await getMaxScoreOfLeveL(studentId, levelId).catch(
+          (err) => {
+            console.log(err);
+          }
+        );
+        scoreMatrix[row][col] = levelScore;
       }
-
-      console.log(matrix);
 
       resolve({
         errCode: 0,
         message: `Get current level of student ${studentId} successfully!`,
-        levelMatrix: matrix,
+        levelMatrix,
+        scoreMatrix,
       });
     } catch (error) {
       resolve({
