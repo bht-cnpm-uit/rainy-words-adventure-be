@@ -207,11 +207,58 @@ const unlockLevel = async (levelId, studentId) => {
   }
 };
 
+const getMaxScoreTimeOfLevel = (studentId, levelId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let maxScore = await db.Game.max("score", {
+        where: {
+          studentId,
+          levelId,
+        },
+      });
+
+      const records = await db.Game.findAll({
+        attributes: [
+          "score",
+          [
+            db.sequelize.literal(
+              "TIMESTAMPDIFF(SECOND, `createdAt`, `updatedAt`)"
+            ),
+            "timeDifference",
+          ],
+        ],
+        where: {
+          score: maxScore,
+          studentId,
+          levelId,
+        },
+      });
+
+      // Tìm người dùng có timeDifference nhỏ nhất trong số những người có max age
+      const recordWithMinTimeDifference = records.reduce(
+        (minRecord, currentRecord) => {
+          return currentRecord.timeDifference < minRecord.timeDifference
+            ? currentRecord
+            : minRecord;
+        },
+        records[0]
+      );
+
+      return resolve(recordWithMinTimeDifference);
+    } catch (error) {
+      console.log("🚀 ~ returnnewPromise ~ error:", error);
+      resolve("Error in BE");
+    }
+  });
+};
+
 const currentLevel = async (studentId) => {
   return new Promise(async (resolve, reject) => {
     try {
       //! Tạo ma trận level
-      let matrix = Array.from({ length: 3 }, () => Array(20).fill(0));
+      let levelMatrix = Array.from({ length: 3 }, () => Array(20).fill(0));
+
+      let scoreTimeMatrix = Array.from({ length: 3 }, () => Array(20).fill(0));
 
       let listLevelId = await db.Unlock.findAll({
         where: { studentId: studentId },
@@ -226,15 +273,21 @@ const currentLevel = async (studentId) => {
       for (let levelId of listLevelId) {
         let row = (levelId % 3) - 1;
         let col = Math.ceil(levelId / 3) - 1;
-        matrix[row][col] = 1;
+        levelMatrix[row][col] = 1;
+        let levelTimeScore = await getMaxScoreTimeOfLevel(
+          studentId,
+          levelId
+        ).catch((err) => {
+          console.log(err);
+        });
+        scoreTimeMatrix[row][col] = levelTimeScore;
       }
-
-      console.log(matrix);
 
       resolve({
         errCode: 0,
         message: `Get current level of student ${studentId} successfully!`,
-        levelMatrix: matrix,
+        levelMatrix,
+        scoreTimeMatrix,
       });
     } catch (error) {
       resolve({

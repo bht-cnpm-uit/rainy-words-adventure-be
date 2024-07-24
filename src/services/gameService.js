@@ -197,7 +197,7 @@ const getRandomWords = (levelId, probabilities, numWords) => {
       }).then((levels) => {
         return levels.map((level) => level.topicId);
       });
-      console.log(listTopic)
+      console.log(listTopic);
       let listRandomWord = [];
 
       for (let topicId of listTopic) {
@@ -215,7 +215,7 @@ const getRandomWords = (levelId, probabilities, numWords) => {
         probabilities,
         numWords
       );
-      console.log("chck random: ", listRandomWordByProbability)
+      console.log("chck random: ", listRandomWordByProbability);
       resolve({
         message: "Get list word successfully!",
         errCode: 0,
@@ -229,25 +229,71 @@ const getRandomWords = (levelId, probabilities, numWords) => {
 };
 
 const getAchievement = (cup) => {
+  // nothing
   if (cup <= 0) return 0;
+  // Khung xanh + hồng
   if (cup == 1) return 1;
+  // Đồng
   if (cup == 2) return 2;
-  if (cup >= 3 && cup < 5) return 3;
-  if (cup >= 5 && cup < 7) return 4;
-  return 5;
+  // Bạc
+  if (cup == 3) return 3;
+  // Vàng
+  if (cup >= 4 && cup < 6) return 4;
+  //Kim cương
+  if (cup >= 6) return 5;
+};
+
+let getAchievementsByListId = (listId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(listId);
+      let listAchievement = await db.Achievement.findAll({
+        where: { id: { [db.Sequelize.Op.in]: listId } },
+        raw: true,
+        attributes: ["id", "name"],
+      });
+
+      return resolve(listAchievement);
+    } catch (error) {
+      console.log("Looix e");
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+const saveListAchievement = (studentId, listId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const listStudentAchievement = listId.map((achievementId) => ({
+        studentId,
+        achievementId,
+      }));
+
+      await db.Achievement_Student.bulkCreate(listStudentAchievement).catch(
+        (err) => {
+          console.log(err);
+        }
+      );
+
+      return resolve(1);
+    } catch (error) {
+      console.log(error);
+      return resolve(0);
+    }
+  });
 };
 
 const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
   return new Promise(async (resolve, reject) => {
     try {
+      //! Get items of student before adding new items
       let beforeItem = await currentItemsOfStudent(studentId);
+
       const endTime = new Date();
-      console.log(time);
       const startTime = new Date(endTime.getTime() - time * 1000);
 
-      console.log("Original time:", endTime);
-      console.log("New time:", startTime);
-      // Lưu record game
+      //! Lưu record game
       let game = await db.Game.create({
         levelId: levelId,
         studentId: studentId,
@@ -261,13 +307,13 @@ const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
       if (score > minScore) {
         unlockLevel(levelId, studentId);
 
-        console.log("Vượt qua level");
+        //console.log("Vượt qua level");
       } else {
         isPassLevel = false;
-        console.log("Không vượt qua level");
+        //console.log("Không vượt qua level");
       }
 
-      // Thêm student id vào
+      //! Thêm student id vào
       items = items.map((element) => {
         return {
           ...element,
@@ -275,38 +321,42 @@ const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
         };
       });
 
-      // Lưu số item kiếm được
+      //! Lưu số item kiếm được
       await db.Student_Item.bulkCreate(items).catch((err) => {
         console.log(err);
       });
 
-      let gainedCup = 0;
-      // logic check if student's level up
+      //! logic check if student's level up
       let afterItem = await currentItemsOfStudent(studentId);
+      let gainedCup = 0;
 
       for (let i = 0; i < 6; i++) {
-        let countBefore = Math.floor(parseInt(beforeItem[i].count) / 500);
-        let countAfter = Math.floor(parseInt(afterItem[i].count) / 500);
-
-        gainedCup = gainedCup + (countAfter - countBefore);
+        let countBefore = parseInt(beforeItem[i].count) < 500;
+        let countAfter = parseInt(afterItem[i].count) >= 500;
+        if (countBefore && countAfter) gainedCup++;
       }
 
       let student = await db.Student.findOne({ where: { id: studentId } });
       let beforeCup = student.cup;
       let beforeAchievement = getAchievement(beforeCup);
       let afterAchievement = getAchievement(beforeCup + gainedCup);
-      if (beforeAchievement != afterAchievement) {
+
+      let listAchievementId = [];
+
+      if (beforeAchievement != afterAchievement && afterAchievement >= 2) {
         console.log("Them danh hieu");
-        for (let j = beforeAchievement + 1; j <= afterAchievement; j++) {
-          await db.Achievement_Student.create({
-            studentId,
-            achievementId: j + 1,
-          });
+        for (let j = beforeAchievement; j < afterAchievement; j++) {
+          listAchievementId.push(j + 1);
         }
       }
+      await saveListAchievement(studentId, listAchievementId);
+      let listAchievement = await getAchievementsByListId(
+        listAchievementId
+      ).catch((err) => {
+        console.log(err);
+      });
 
       if (gainedCup > 0) {
-        console.log("Tang cup");
         await db.Student.increment(
           {
             cup: gainedCup,
@@ -326,6 +376,7 @@ const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
         game: game,
         isGetCup: gainedCup > 0 ? true : false,
         isPassLevel,
+        listAchievement,
       });
     } catch (error) {
       console.log("🚀 ~ returnnewPromise ~ error:", error);
