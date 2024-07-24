@@ -226,8 +226,6 @@ const currentLevel = async (studentId) => {
       for (let levelId of listLevelId) {
         let row = (levelId % 3) - 1;
         let col = Math.ceil(levelId / 3) - 1;
-        console.log(row);
-        console.log(col);
         matrix[row][col] = 1;
       }
 
