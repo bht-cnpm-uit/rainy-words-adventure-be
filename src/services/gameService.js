@@ -255,6 +255,22 @@ let getAchievementsByListId = (listId) => {
   });
 };
 
+let getItemsByListId = (listId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let listItem = await db.Item.findAll({
+        where: { id: { [db.Sequelize.Op.in]: listId } },
+        raw: true,
+        attributes: ["id", "name"],
+      });
+      return resolve(listItem);
+    } catch (error) {
+      console.log("Looix e");
+      console.log(error);
+      reject(error);
+    }
+  });
+};
 const saveListAchievement = (studentId, listId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -322,12 +338,19 @@ const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
       //! logic check if student's level up
       let afterItem = await currentItemsOfStudent(studentId);
       let gainedCup = 0;
+      let listItemId = [];
 
       for (let i = 0; i < 6; i++) {
         let countBefore = parseInt(beforeItem[i].count) < 500;
         let countAfter = parseInt(afterItem[i].count) >= 500;
-        if (countBefore && countAfter) gainedCup++;
+        if (countBefore && countAfter) {
+          gainedCup++;
+          listItemId.push(i + 1);
+        }
       }
+
+      //! Get items info that trigger getting new cup
+      let listItemTriggerCup = await getItemsByListId(listItemId);
 
       let student = await db.Student.findOne({ where: { id: studentId } });
       let beforeCup = student.cup;
@@ -367,9 +390,9 @@ const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
         message: "Create game successfully!",
         errCode: 0,
         game: game,
-        isGetCup: gainedCup > 0 ? true : false,
         isPassLevel,
         listAchievement,
+        itemsGetCup: listItemTriggerCup,
       });
     } catch (error) {
       console.log("🚀 ~ returnnewPromise ~ error:", error);
