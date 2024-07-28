@@ -201,9 +201,9 @@ const unlockLevel = async (levelId, studentId) => {
     await db.Unlock.create({ studentId, levelId }).catch((err) => {
       console.log(err);
     });
-    console.log("Màn này chưa chơi");
+    //console.log("Màn này chưa chơi");
   } else {
-    console.log("Màn này đã chơi rồi");
+    // console.log("Màn này đã chơi rồi");
   }
 };
 

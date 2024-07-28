@@ -59,9 +59,7 @@ let handleUserSignUp = (
         //return res.status(400).json({ error: "Phone number already exists" });
       } else {
         let hashPassword = bcrypt.hashSync(password, salt);
-        console.log("🚀 ~ returnnewPromise ~ hashPassword:", hashPassword);
         let id = uuidv4();
-        console.log("🚀 ~ returnnewPromise ~ id:", id);
 
         const newUser = await db.Student.create({
           id: id,
@@ -123,7 +121,7 @@ let handleUserUpdate = (
         if (!isForgotPassword) {
           let checkPassword = bcrypt.compareSync(oldPassword, student.password);
           if (!checkPassword) {
-            console.log("OKE");
+            //console.log("OKE");
             return resolve({
               message: "Wrong password",
               errCode: "4",

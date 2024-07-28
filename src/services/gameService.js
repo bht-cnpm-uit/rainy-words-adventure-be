@@ -182,7 +182,6 @@ const getWordsByProbability = (words, probabilities, numWords) => {
     result = result.concat(getWords("Hard", numWords - result.length));
   }
 
-
   return result;
 };
 
@@ -197,7 +196,6 @@ const getRandomWords = (levelId, probabilities, numWords) => {
       }).then((levels) => {
         return levels.map((level) => level.topicId);
       });
-      console.log(listTopic);
       let listRandomWord = [];
 
       for (let topicId of listTopic) {
@@ -215,7 +213,6 @@ const getRandomWords = (levelId, probabilities, numWords) => {
         probabilities,
         numWords
       );
-      console.log("chck random: ", listRandomWordByProbability);
       resolve({
         message: "Get list word successfully!",
         errCode: 0,
@@ -246,7 +243,6 @@ const getAchievement = (cup) => {
 let getAchievementsByListId = (listId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(listId);
       let listAchievement = await db.Achievement.findAll({
         where: { id: { [db.Sequelize.Op.in]: listId } },
         raw: true,
@@ -255,7 +251,6 @@ let getAchievementsByListId = (listId) => {
 
       return resolve(listAchievement);
     } catch (error) {
-      console.log("Looix e");
       console.log(error);
       reject(error);
     }
@@ -272,7 +267,6 @@ let getItemsByListId = (listId) => {
       });
       return resolve(listItem);
     } catch (error) {
-      console.log("Looix e");
       console.log(error);
       reject(error);
     }
@@ -367,7 +361,6 @@ const saveGame = (levelId, studentId, score, items, time, minScore = 200) => {
       let listAchievementId = [];
 
       if (beforeAchievement != afterAchievement && afterAchievement >= 2) {
-        console.log("Them danh hieu");
         for (let j = beforeAchievement; j < afterAchievement; j++) {
           listAchievementId.push(j + 1);
         }
