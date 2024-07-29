@@ -28,8 +28,6 @@ const getListSchool = async () => {
 const createSchool = async (listSchool) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(listSchool);
-
       db.School.bulkCreate(listSchool)
         .catch((err) => {
           console.log(err);

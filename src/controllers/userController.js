@@ -30,7 +30,6 @@ let handleSignUp = async (req, res) => {
       message: "Missing input parameter !",
     });
   }
-  console.log(req.body);
   let userData = await handleUserSignUp(
     name,
     schoolId,
@@ -69,7 +68,6 @@ let handleUpdate = async (req, res) => {
 
 let handleChangePassword = async (req, res) => {
   let changePasswordData = req.body;
-  console.log(changePasswordData);
   let userData = await handleUserChangePassword(changePasswordData);
   return res.status(200).json(userData);
 };

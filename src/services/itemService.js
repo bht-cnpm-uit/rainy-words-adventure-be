@@ -28,9 +28,7 @@ const getListItem = async () => {
 const createItem = async (listItem) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(listItem);
-
-      db.Item.bulkCreate(listItem)
+      await db.Item.bulkCreate(listItem)
         .catch((err) => {
           console.log(err);
         })
