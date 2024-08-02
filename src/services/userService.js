@@ -46,7 +46,15 @@ let handleUserLogin = (phoneNumber, password) => {
         });
       }
       return resolve({
-        student: student,
+        student: {
+          "id": student.id,
+          "name": student.name,
+          "grade": student.grade,
+          "birthday": student.birthday,
+          "phoneNumber": student.phoneNumber,
+          "schoolId": student.schoolId,
+          "cup": "0",
+        },
         message: "Login sucessfully!",
         errCode: 0,
       });
@@ -102,7 +110,6 @@ let handleUserSignUp = (
         // Send a success response
         //res.status(201).json(newUser);
         resolve({
-          userInfo: newUser,
           message: "Sign up sucessfully",
           errCode: "0",
         });
