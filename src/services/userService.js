@@ -283,6 +283,71 @@ let studentInfomation = (id) => {
   });
 };
 
+const studentCreateWord = (studentId, wordId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await db.Student_Word.create({ studentId, wordId });
+      resolve({
+        errCode: 0,
+        message: "Add word successfully!",
+      });
+    } catch (error) {
+      reject({
+        errCode: 3,
+        message: "Add word unsuccessfully!",
+        error: error,
+      });
+    }
+  });
+};
+const studentDeleteWord = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await db.Student_Word.destroy({ where: { id } });
+      resolve({
+        errCode: 0,
+        message: "Delete word successfully!",
+      });
+    } catch (error) {
+      reject({
+        errCode: 3,
+        message: "Delete word unsuccessfully!",
+        error: error,
+      });
+    }
+  });
+};
+const listStudentWord = (studentId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let listWordId = await db.Student_Word.findAll({
+        where: {
+          studentId,
+        },
+        attributes: ["wordId"],
+      }).then((result) => {
+        return result.map((word) => word.wordId);
+      });
+
+      let listWord = await db.Word.findAll({
+        where: { id: listWordId },
+      });
+
+      resolve({
+        errCode: 0,
+        message: "Get list word successfully!",
+        listWord,
+      });
+    } catch (error) {
+      reject({
+        errCode: 3,
+        message: "Get list word unsuccessfully!",
+        error: error,
+      });
+    }
+  });
+};
+
 export {
   handleUserLogin,
   handleUserSignUp,
@@ -290,4 +355,7 @@ export {
   getListStudent,
   studentAchievement,
   studentInfomation,
+  studentCreateWord,
+  studentDeleteWord,
+  listStudentWord,
 };

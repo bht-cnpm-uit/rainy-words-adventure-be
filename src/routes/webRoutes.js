@@ -8,6 +8,9 @@ import {
   getAllStudent,
   getStudentAchievement,
   getStudentInfomation,
+  postStudentCreateWord,
+  postStudentDeleteWord,
+  getAllStudentWord,
 } from "../controllers/userController";
 import { hanldExport } from "../controllers/adminController";
 import {
@@ -67,6 +70,9 @@ let initWebRoutes = (app) => {
   router.get("/user/get-all-student", getAllStudent);
   router.get("/user/get-achievement/:id", getStudentAchievement);
   router.get("/user/get-info/:id", getStudentInfomation);
+  router.post("/student-word/create", postStudentCreateWord);
+  router.post("/student-word/delete", postStudentDeleteWord);
+  router.post("/student-word/get-all", getAllStudentWord);
 
   //! Game api
   router.get("/leaderboard/", getGameLeaderboard);

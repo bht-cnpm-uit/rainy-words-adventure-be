@@ -6,6 +6,9 @@ import {
   getListStudent,
   studentAchievement,
   studentInfomation,
+  studentCreateWord,
+  studentDeleteWord,
+  listStudentWord,
 } from "../services/userService";
 // example login
 
@@ -101,6 +104,44 @@ let getStudentInfomation = async (req, res) => {
   return res.status(200).json(response);
 };
 
+const postStudentCreateWord = async (req, res) => {
+  const { studentId, wordId } = req.body;
+  if (!studentId || !wordId) {
+    return res.status(500).json({
+      errCode: 1,
+      message: "Missing input parameter !",
+    });
+  }
+  let response = await studentCreateWord(studentId, wordId).catch((err) =>
+    console.log(err)
+  );
+  return res.status(200).json(response);
+};
+const postStudentDeleteWord = async (req, res) => {
+  const { id } = req.body;
+  if (!id) {
+    return res.status(500).json({
+      errCode: 1,
+      message: "Missing input parameter !",
+    });
+  }
+  let response = await studentDeleteWord(id).catch((err) => console.log(err));
+  return res.status(200).json(response);
+};
+const getAllStudentWord = async (req, res) => {
+  const { studentId } = req.body;
+  if (!studentId) {
+    return res.status(500).json({
+      errCode: 1,
+      message: "Missing input parameter !",
+    });
+  }
+  let response = await listStudentWord(studentId).catch((err) =>
+    console.log(err)
+  );
+  return res.status(200).json(response);
+};
+
 export {
   handleLogin,
   handleSignUp,
@@ -109,4 +150,7 @@ export {
   getAllStudent,
   getStudentAchievement,
   getStudentInfomation,
+  postStudentCreateWord,
+  postStudentDeleteWord,
+  getAllStudentWord,
 };
