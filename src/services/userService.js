@@ -6,6 +6,25 @@ let salt = bcrypt.genSaltSync(10);
 let handleUserLogin = (phoneNumber, password) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let admin = await db.Admin.findOne({
+        where: {
+          username: phoneNumber,
+        },
+      });
+
+      if (admin) {
+        if (admin.password == password)
+          return resolve({
+            isAdmin: true,
+          });
+        else {
+          return resolve({
+            message: "Wrong password!",
+            errCode: 2,
+          });
+        }
+      }
+
       let student = await db.Student.findOne({
         where: { phoneNumber: phoneNumber },
         raw: true,
@@ -54,8 +73,16 @@ let handleUserSignUp = (
       const existingUser = await db.Student.findOne({
         where: { phoneNumber: phoneNumber },
       });
-      if (existingUser) {
-        resolve({ message: "Phone number already exists", errCode: "2" });
+
+      const existingAdmin = await db.Admin.findOne({
+        where: { username: phoneNumber },
+      });
+
+      if (existingUser || existingAdmin) {
+        return resolve({
+          message: "Phone number already exists",
+          errCode: "2",
+        });
         //return res.status(400).json({ error: "Phone number already exists" });
       } else {
         let hashPassword = bcrypt.hashSync(password, salt);
