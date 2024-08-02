@@ -12,17 +12,6 @@ require("dotenv").config();
 const db = {};
 
 let sequelize;
-// if (config.use_env_variable) {
-//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
-// } else {
-//   sequelize = new Sequelize(
-//     config.database,
-//     config.username,
-//     config.password,
-//     config
-//   );
-// }
-
 const customizeConfig = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -35,11 +24,11 @@ const customizeConfig = {
     // dateStrings: true,
     process.env.DD_SSL === "true"
       ? {
-          ssl: {
-            require: true,
-            rejectUnauthorized: false,
-          },
-        }
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      }
       : {},
   query: {
     raw: true,
