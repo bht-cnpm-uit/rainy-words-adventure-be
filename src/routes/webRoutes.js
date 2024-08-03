@@ -70,8 +70,8 @@ let initWebRoutes = (app) => {
   router.post("/user/update-info", handleUpdate);
   router.post("/user/update-avatar", handleUpdateAvatar);
   router.get("/user/get-all-student", getAllStudent);
-  router.get("/user/get-achievement", getStudentAchievement);
-  router.get("/user/get-info", getStudentInfomation);
+  router.post("/user/get-achievement", getStudentAchievement);
+  router.post("/user/get-info", getStudentInfomation);
   router.post("/student-word/create", postStudentCreateWord);
   router.post("/student-word/delete", postStudentDeleteWord);
   router.post("/student-word/get-all", getAllStudentWord);
@@ -101,7 +101,7 @@ let initWebRoutes = (app) => {
   router.post("/item/create", postCreateItem);
   router.post("/item/delete", postDeleteItem);
   router.post("/item/update", postUpdateItem);
-  router.get("/item/get-student", getStudentItem);
+  router.post("/item/get-student", getStudentItem);
 
   //! Word
   router.get("/word/get-all", getAllWord);
@@ -116,7 +116,7 @@ let initWebRoutes = (app) => {
   router.post("/level/delete", postDeleteLevel);
   router.post("/level/add-topic", postAddTopicLevel);
   router.post("/level/delete-topic", postDeleteTopicLevel);
-  router.get("/level/get-current", getCurrentLevel);
+  router.post("/level/get-current", getCurrentLevel);
 
   //! User api
   router.get("/test", testApi);

@@ -305,7 +305,6 @@ let studentInfomation = (id) => {
           id,
         },
       }).catch((err) => {
-        console.log(err);
         resolve({
           errCode: 2,
           message: "Error in BE!",
