@@ -46,7 +46,7 @@ const postUpdateItem = async (req, res) => {
 };
 
 const getStudentItem = async (req, res) => {
-  const { id } = req.params;
+  const id = req.query.id;
   if (!id) {
     return res.status(500).json({
       message: "Missing input parameters",

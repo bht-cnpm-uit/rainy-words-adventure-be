@@ -102,7 +102,7 @@ let getAllStudent = async (req, res) => {
 };
 
 let getStudentAchievement = async (req, res) => {
-  const { id } = req.params;
+  const id = req.query.id;
   if (!id) {
     return res.status(500).json({
       errCode: 1,
@@ -114,7 +114,7 @@ let getStudentAchievement = async (req, res) => {
 };
 
 let getStudentInfomation = async (req, res) => {
-  const { id } = req.params;
+  const id = req.query.id;
   if (!id) {
     return res.status(500).json({
       errCode: 1,

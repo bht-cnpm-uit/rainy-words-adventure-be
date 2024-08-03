@@ -72,7 +72,7 @@ const postDeleteTopicLevel = async (req, res) => {
 };
 
 const getCurrentLevel = async (req, res) => {
-  const { studentid } = req.params;
+  const studentid = req.query.studentid;
   if (!studentid) {
     return res.status(500).json({
       message: "Missing input parameters",
