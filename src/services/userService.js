@@ -264,9 +264,9 @@ let studentAchievement = (id) => {
     try {
       let query = `
         SELECT achievementId AS id, name
-        FROM achievement_student 
-        INNER JOIN achievements
-        ON achievement_student.achievementId = achievements.id
+        FROM Achievement_Student 
+        INNER JOIN Achievements
+        ON Achievement_student.achievementId = Achievements.id
         WHERE studentId = ?
       `;
       let listAchievement = await db.sequelize
@@ -322,7 +322,7 @@ let studentInfomation = (id) => {
       //? Get score of student
       let query = `
       SELECT studentId, SUM(score) AS score
-      FROM games
+      FROM Games
       WHERE studentId = ?
       GROUP BY studentId
       `;
