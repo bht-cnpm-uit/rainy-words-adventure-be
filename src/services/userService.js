@@ -310,18 +310,42 @@ let studentInfomation = (id) => {
   });
 };
 
-const studentCreateWord = (studentId, wordId) => {
+function removeCommonElements(arr1, arr2) {
+  return arr1.filter((element) => !arr2.includes(element));
+}
+
+const studentCreateWord = (studentId, listWordId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      await db.Student_Word.create({ studentId, wordId });
+      //! get current list word
+
+      let currentListWord = await db.Student_Word.findAll({
+        where: {
+          studentId,
+        },
+        attributes: ["wordId"],
+      }).then((result) => {
+        return result.map((word) => word.wordId);
+      });
+
+      let filterListWord = removeCommonElements(listWordId, currentListWord);
+
+      let listWord = filterListWord.map((wordId) => {
+        return {
+          studentId,
+          wordId,
+        };
+      });
+
+      await db.Student_Word.bulkCreate(listWord);
       resolve({
         errCode: 0,
-        message: "Add word successfully!",
+        message: "Add list word successfully!",
       });
     } catch (error) {
       reject({
         errCode: 3,
-        message: "Add word unsuccessfully!",
+        message: "Add list word unsuccessfully!",
         error: error,
       });
     }
