@@ -46,7 +46,17 @@ let handleUserLogin = (phoneNumber, password) => {
         });
       }
       return resolve({
-        student: student,
+        student: {
+          "id": student.id,
+          "name": student.name,
+          "grade": student.grade,
+          "birthday": student.birthday,
+          "phoneNumber": student.phoneNumber,
+          "schoolId": student.schoolId,
+          "cup": student.cup,
+          "AvatarId": student.AvatarId,
+          "FrameId": student.FrameId
+        },
         message: "Login sucessfully!",
         errCode: 0,
       });
@@ -97,12 +107,13 @@ let handleUserSignUp = (
           phoneNumber: phoneNumber,
           password: hashPassword,
           cup: 0,
+          AvatarId: 0,
+          FrameId: 0
         });
 
         // Send a success response
         //res.status(201).json(newUser);
         resolve({
-          userInfo: newUser,
           message: "Sign up sucessfully",
           errCode: "0",
         });
@@ -118,7 +129,35 @@ let handleUserSignUp = (
     }
   });
 };
+let handleUserUpdateAvatar = (studentId, AvatarId, FrameId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await db.Student.update(
+        {
+          AvatarId: AvatarId,
+          FrameId: FrameId
+        },
+        {
+          where: {
+            id: studentId,
+          },
+        }
+      ).catch((err) => console.log(err));
 
+      resolve({
+        message: "Update student avatar & frame successfully",
+        errCode: "0",
+      });
+    } catch (error) {
+      console.log(error);
+      // Handle any errors
+      reject({
+        message: "An error occurred while update avatar & frame",
+        errCode: "4",
+      });
+    }
+  })
+}
 let handleUserUpdate = (
   schoolId,
   grade,
@@ -148,7 +187,6 @@ let handleUserUpdate = (
         if (!isForgotPassword) {
           let checkPassword = bcrypt.compareSync(oldPassword, student.password);
           if (!checkPassword) {
-            //console.log("OKE");
             return resolve({
               message: "Wrong password",
               errCode: "4",
@@ -226,9 +264,9 @@ let studentAchievement = (id) => {
     try {
       let query = `
         SELECT achievementId AS id, name
-        FROM achievement_student 
-        INNER JOIN achievements
-        ON achievement_student.achievementId = achievements.id
+        FROM Achievement_Student 
+        INNER JOIN Achievements
+        ON Achievement_Student.achievementId = Achievements.id
         WHERE studentId = ?
       `;
       let listAchievement = await db.sequelize
@@ -267,7 +305,6 @@ let studentInfomation = (id) => {
           id,
         },
       }).catch((err) => {
-        console.log(err);
         resolve({
           errCode: 2,
           message: "Error in BE!",
@@ -285,7 +322,7 @@ let studentInfomation = (id) => {
       //? Get score of student
       let query = `
       SELECT studentId, SUM(score) AS score
-      FROM games
+      FROM Games
       WHERE studentId = ?
       GROUP BY studentId
       `;
@@ -403,6 +440,7 @@ export {
   handleUserLogin,
   handleUserSignUp,
   handleUserUpdate,
+  handleUserUpdateAvatar,
   getListStudent,
   studentAchievement,
   studentInfomation,

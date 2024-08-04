@@ -2,6 +2,7 @@ import {
   handleUserLogin,
   handleUserSignUp,
   handleUserUpdate,
+  handleUserUpdateAvatar,
   handleUserChangePassword,
   getListStudent,
   studentAchievement,
@@ -44,6 +45,26 @@ let handleSignUp = async (req, res) => {
   return res.status(200).json(userData);
 };
 
+let handleUpdateAvatar = async (req, res) => {
+  const {
+    studentId,
+    AvatarId,
+    FrameId
+  } = req.body;
+  if (!studentId || !AvatarId || !FrameId) {
+    return res.status(500).json({
+      errCode: 1,
+      message: "Missing input parameter !",
+    })
+  }
+  let response = await handleUserUpdateAvatar(
+    studentId,
+    AvatarId,
+    FrameId
+  );
+  return res.status(200).json(response)
+}
+
 let handleUpdate = async (req, res) => {
   const {
     schoolId,
@@ -81,7 +102,7 @@ let getAllStudent = async (req, res) => {
 };
 
 let getStudentAchievement = async (req, res) => {
-  const { id } = req.params;
+  const id = req.body.id;
   if (!id) {
     return res.status(500).json({
       errCode: 1,
@@ -93,7 +114,7 @@ let getStudentAchievement = async (req, res) => {
 };
 
 let getStudentInfomation = async (req, res) => {
-  const { id } = req.params;
+  const id = req.body.id;
   if (!id) {
     return res.status(500).json({
       errCode: 1,
@@ -146,6 +167,7 @@ export {
   handleLogin,
   handleSignUp,
   handleUpdate,
+  handleUpdateAvatar,
   handleChangePassword,
   getAllStudent,
   getStudentAchievement,

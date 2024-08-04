@@ -29,6 +29,12 @@ module.exports = {
       schoolId: {
         type: Sequelize.INTEGER,
       },
+      AvatarId: {
+        type: Sequelize.INTEGER,
+      },
+      FrameId: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
