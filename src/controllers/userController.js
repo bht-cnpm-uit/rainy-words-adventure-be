@@ -105,14 +105,14 @@ let getStudentInfomation = async (req, res) => {
 };
 
 const postStudentCreateWord = async (req, res) => {
-  const { studentId, wordId } = req.body;
-  if (!studentId || !wordId) {
+  const { studentId, listWordId } = req.body;
+  if (!studentId || !listWordId) {
     return res.status(500).json({
       errCode: 1,
       message: "Missing input parameter !",
     });
   }
-  let response = await studentCreateWord(studentId, wordId).catch((err) =>
+  let response = await studentCreateWord(studentId, listWordId).catch((err) =>
     console.log(err)
   );
   return res.status(200).json(response);
