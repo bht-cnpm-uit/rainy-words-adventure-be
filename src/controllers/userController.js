@@ -51,7 +51,7 @@ let handleUpdateAvatar = async (req, res) => {
     AvatarId,
     FrameId
   } = req.body;
-  if (!studentId || !AvatarId || !FrameId) {
+  if (studentId === null || AvatarId === null || FrameId === null) {
     return res.status(500).json({
       errCode: 1,
       message: "Missing input parameter !",
