@@ -266,7 +266,7 @@ let studentAchievement = (id) => {
         SELECT achievementId AS id, name
         FROM Achievement_Student 
         INNER JOIN Achievements
-        ON Achievement_student.achievementId = Achievements.id
+        ON Achievement_Student.achievementId = Achievements.id
         WHERE studentId = ?
       `;
       let listAchievement = await db.sequelize
